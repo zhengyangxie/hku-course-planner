@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HKU Mathematics Course Planner</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>HKU Course Planner</h1>
+        <p class="subtitle">Bachelor of Science &mdash; Credit Cap: 288</p>
+    </header>
+
+    <!-- Program Selection: Drag & Drop -->
+    <section class="program-section">
+        <div class="program-pool">
+            <h2>Available Programs</h2>
+            <p class="hint">Drag a program into "My Degree" to add it</p>
+            <div id="available-programs" class="program-cards"></div>
+        </div>
+        <div class="my-degree">
+            <h2>My Degree</h2>
+            <div id="my-programs" class="program-drop-zone">
+                <!-- Math major is always here -->
+                <div class="program-tag fixed" data-key="math">
+                    <span class="program-tag-icon">&#x1F4D0;</span>
+                    <div class="program-tag-info">
+                        <strong>Mathematics</strong>
+                        <span>Major &middot; 96 cr</span>
+                    </div>
+                </div>
+                <!-- Dropped programs go here -->
+            </div>
+            <div id="overlap-note" class="overlap-note" style="display:none;"></div>
+        </div>
+    </section>
+
+    <!-- Dashboard -->
+    <div class="dashboard">
+        <div class="progress-card">
+            <h3>Total Credits</h3>
+            <div class="progress-bar"><div id="total-credits-bar" class="progress-fill"></div></div>
+            <span id="total-credits">0</span> / 240
+        </div>
+        <div class="progress-card">
+            <h3>Mathematics Major</h3>
+            <div class="progress-bar"><div id="major-credits-bar" class="progress-fill major"></div></div>
+            <span id="major-credits">0</span> / 96
+        </div>
+        <div id="program-cards-container"></div>
+        <div class="progress-card">
+            <h3>Common Core</h3>
+            <div class="progress-bar"><div id="cc-credits-bar" class="progress-fill cc"></div></div>
+            <span id="cc-credits">0</span> / 36
+        </div>
+        <div class="progress-card">
+            <h3>Language</h3>
+            <div class="progress-bar"><div id="lang-credits-bar" class="progress-fill lang"></div></div>
+            <span id="lang-credits">0</span> / 18
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Course Pool -->
+        <div class="course-pool">
+            <h2>Course Pool</h2>
+            <div class="filter-bar">
+                <select id="category-filter">
+                    <option value="all">All Categories</option>
+                    <option value="math-core">Math Core</option>
+                    <option value="math-adv-core">Math Advanced Core</option>
+                    <option value="math-elec-a">Math Elective List A</option>
+                    <option value="math-elec-b">Math Elective List B</option>
+                    <option value="math-capstone">Capstone</option>
+                    <option value="science">Science Foundation</option>
+                    <option value="common-core">Common Core</option>
+                    <option value="language">Language</option>
+                    <option value="second-major">2nd Major / Minor</option>
+                    <option value="free-elective">Free Elective</option>
+                </select>
+                <input type="text" id="search-input" placeholder="Search courses...">
+            </div>
+            <div id="course-list" class="course-list"></div>
+            <button id="add-custom-btn" class="btn-add-custom">+ Add Custom Course</button>
+        </div>
+
+        <!-- Semester Grid -->
+        <div class="planner-grid">
+            <h2>4-Year Course Plan</h2>
+            <div class="years-container">
+                <div class="year-block" data-year="1">
+                    <h3>Year 1</h3>
+                    <div class="semesters">
+                        <div class="semester" data-semester="1-1">
+                            <h4>Semester 1</h4>
+                            <div class="semester-courses" id="sem-1-1"></div>
+                            <div class="semester-credits">Credits: <span>0</span>/30</div>
+                        </div>
+                        <div class="semester" data-semester="1-2">
+                            <h4>Semester 2</h4>
+                            <div class="semester-courses" id="sem-1-2"></div>
+                            <div class="semester-credits">Credits: <span>0</span>/30</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="year-block" data-year="2">
+                    <h3>Year 2</h3>
+                    <div class="semesters">
+                        <div class="semester" data-semester="2-1">
+                            <h4>Semester 1</h4>
+                            <div class="semester-courses" id="sem-2-1"></div>
+                            <div class="semester-credits">Credits: <span>0</span>/30</div>
+                        </div>
+                        <div class="semester" data-semester="2-2">
+                            <h4>Semester 2</h4>
+                            <div class="semester-courses" id="sem-2-2"></div>
+                            <div class="semester-credits">Credits: <span>0</span>/30</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="year-block" data-year="3">
+                    <h3>Year 3</h3>
+                    <div class="semesters">
+                        <div class="semester" data-semester="3-1">
+                            <h4>Semester 1</h4>
+                            <div class="semester-courses" id="sem-3-1"></div>
+                            <div class="semester-credits">Credits: <span>0</span>/30</div>
+                        </div>
+                        <div class="semester" data-semester="3-2">
+                            <h4>Semester 2</h4>
+                            <div class="semester-courses" id="sem-3-2"></div>
+                            <div class="semester-credits">Credits: <span>0</span>/30</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="year-block" data-year="4">
+                    <h3>Year 4</h3>
+                    <div class="semesters">
+                        <div class="semester" data-semester="4-1">
+                            <h4>Semester 1</h4>
+                            <div class="semester-courses" id="sem-4-1"></div>
+                            <div class="semester-credits">Credits: <span>0</span>/30</div>
+                        </div>
+                        <div class="semester" data-semester="4-2">
+                            <h4>Semester 2</h4>
+                            <div class="semester-courses" id="sem-4-2"></div>
+                            <div class="semester-credits">Credits: <span>0</span>/30</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Warnings -->
+    <div id="warnings-panel" class="warnings-panel" style="display:none;">
+        <h3>Warnings</h3>
+        <ul id="warnings-list"></ul>
+    </div>
+
+    <!-- Graduation Check -->
+    <div class="graduation-check">
+        <button id="check-graduation" class="btn-check">Check Graduation Requirements</button>
+        <div id="graduation-result" class="graduation-result" style="display:none;"></div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions-bar">
+        <button id="save-btn" class="btn-action">Save Plan</button>
+        <button id="load-btn" class="btn-action">Load Plan</button>
+        <button id="export-btn" class="btn-action">Export</button>
+        <button id="clear-btn" class="btn-action btn-danger">Clear Plan</button>
+    </div>
+
+    <!-- Custom Course Modal -->
+    <div id="custom-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h3>Add Custom Course</h3>
+            <label>Course Code: <input type="text" id="custom-code" placeholder="e.g. COMP1117"></label>
+            <label>Course Name: <input type="text" id="custom-name" placeholder="e.g. Computer Programming"></label>
+            <label>Credits: <input type="number" id="custom-credits" value="6" min="1" max="12"></label>
+            <label>Category:
+                <select id="custom-category">
+                    <option value="second-major">2nd Major / Minor</option>
+                    <option value="free-elective">Free Elective</option>
+                    <option value="common-core">Common Core</option>
+                    <option value="language">Language</option>
+                </select>
+            </label>
+            <div class="modal-actions">
+                <button id="custom-save" class="btn-action">Add</button>
+                <button id="custom-cancel" class="btn-action btn-danger">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="courses.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

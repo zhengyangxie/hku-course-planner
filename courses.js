@@ -1,0 +1,455 @@
+// HKU Mathematics Major — Course Database
+const COURSES = [
+    // === Science Foundation (Required) ===
+    { code: "SCNC1111", name: "Scientific Method and Reasoning", credits: 6, category: "science", prerequisites: [] },
+    { code: "SCNC1112", name: "Fundamentals of Modern Science", credits: 6, category: "science", prerequisites: [] },
+
+    // === Math Disciplinary Core (Required) ===
+    { code: "MATH1013", name: "University Mathematics II", credits: 6, category: "math-core", prerequisites: [] },
+    { code: "MATH2012", name: "Fundamental Concepts of Mathematics", credits: 6, category: "math-core", prerequisites: ["MATH1013"] },
+    { code: "MATH2101", name: "Linear Algebra I", credits: 6, category: "math-core", prerequisites: ["MATH1013"] },
+    { code: "MATH2102", name: "Linear Algebra II", credits: 6, category: "math-core", prerequisites: ["MATH2101"] },
+    { code: "MATH2211", name: "Multivariable Calculus", credits: 6, category: "math-core", prerequisites: ["MATH1013"] },
+    { code: "MATH2241", name: "Introduction to Mathematical Analysis", credits: 6, category: "math-core", prerequisites: ["MATH1013"] },
+
+    // === Advanced Core (Required) ===
+    { code: "MATH3401", name: "Analysis I", credits: 6, category: "math-adv-core", prerequisites: ["MATH2211"] },
+
+    // === Advanced Electives — List A ===
+    { code: "MATH3301", name: "Algebra I", credits: 6, category: "math-elec-a", prerequisites: ["MATH2101", "MATH2102"] },
+    { code: "MATH3403", name: "Functions of a Complex Variable", credits: 6, category: "math-elec-a", prerequisites: ["MATH2211", "MATH2241"] },
+    { code: "MATH3601", name: "Numerical Analysis", credits: 6, category: "math-elec-a", prerequisites: ["MATH2101", "MATH2211"] },
+    { code: "MATH3603", name: "Probability Theory", credits: 6, category: "math-elec-a", prerequisites: ["MATH2101", "MATH2211"] },
+    { code: "MATH3904", name: "Introduction to Optimization", credits: 6, category: "math-elec-a", prerequisites: ["MATH2101", "MATH2211"] },
+
+    // === Advanced Electives — List B ===
+    { code: "MATH3002", name: "Mathematics Seminar", credits: 6, category: "math-elec-b", prerequisites: [] },
+    { code: "MATH3304", name: "Introduction to Number Theory", credits: 6, category: "math-elec-b", prerequisites: ["MATH2012"] },
+    { code: "MATH3405", name: "Differential Equations", credits: 6, category: "math-elec-b", prerequisites: ["MATH2101", "MATH2211"] },
+    { code: "MATH3541", name: "Introduction to Topology", credits: 6, category: "math-elec-b", prerequisites: ["MATH2241"] },
+    { code: "MATH3600", name: "Discrete Mathematics", credits: 6, category: "math-elec-b", prerequisites: [] },
+    { code: "MATH3901", name: "Operations Research I", credits: 6, category: "math-elec-b", prerequisites: ["MATH2101"] },
+    { code: "MATH3906", name: "Financial Calculus", credits: 6, category: "math-elec-b", prerequisites: ["MATH2211"] },
+    { code: "MATH3911", name: "Game Theory and Strategy", credits: 6, category: "math-elec-b", prerequisites: [] },
+    { code: "MATH3943", name: "Network Models in Operations Research", credits: 6, category: "math-elec-b", prerequisites: [] },
+    { code: "MATH4302", name: "Algebra II", credits: 6, category: "math-elec-b", prerequisites: ["MATH3301"] },
+    { code: "MATH4402", name: "Analysis II", credits: 6, category: "math-elec-b", prerequisites: ["MATH3401"] },
+    { code: "MATH4404", name: "Functional Analysis", credits: 6, category: "math-elec-b", prerequisites: ["MATH3401"] },
+    { code: "MATH4406", name: "Introduction to Partial Differential Equations", credits: 6, category: "math-elec-b", prerequisites: ["MATH3401"] },
+    { code: "MATH4501", name: "Geometry", credits: 6, category: "math-elec-b", prerequisites: ["MATH2101"] },
+    { code: "MATH4511", name: "Introduction to Differentiable Manifolds", credits: 6, category: "math-elec-b", prerequisites: ["MATH2211", "MATH2241"] },
+    { code: "MATH4602", name: "Scientific Computing", credits: 6, category: "math-elec-b", prerequisites: ["MATH3601"] },
+    { code: "MATH4902", name: "Operations Research II", credits: 6, category: "math-elec-b", prerequisites: ["MATH3901"] },
+    { code: "MATH4907", name: "Numerical Methods for Financial Calculus", credits: 6, category: "math-elec-b", prerequisites: ["MATH3601"] },
+
+    // === Capstone ===
+    { code: "MATH3999", name: "Directed Studies in Mathematics", credits: 6, category: "math-capstone", prerequisites: [] },
+    { code: "MATH4910", name: "Senior Mathematics Seminar", credits: 6, category: "math-capstone", prerequisites: [] },
+    { code: "MATH4911", name: "Mathematics Capstone Project", credits: 6, category: "math-capstone", prerequisites: [] },
+    { code: "MATH4966", name: "Mathematics Internship", credits: 6, category: "math-capstone", prerequisites: [] },
+    { code: "MATH4999", name: "Mathematics Project", credits: 12, category: "math-capstone", prerequisites: [] },
+
+    // === Language ===
+    { code: "CAES1000", name: "Core University English", credits: 6, category: "language", prerequisites: [] },
+    { code: "CAES9000", name: "English in the Discipline", credits: 6, category: "language", prerequisites: ["CAES1000"] },
+    { code: "CHIN9001", name: "Chinese Language Enhancement", credits: 6, category: "language", prerequisites: [] },
+
+    // === Common Core ===
+    { code: "CCST____", name: "Common Core: Scientific & Technological Literacy", credits: 6, category: "common-core", prerequisites: [] },
+    { code: "CCHU____", name: "Common Core: Arts & Humanities", credits: 6, category: "common-core", prerequisites: [] },
+    { code: "CCGL____", name: "Common Core: Global Issues", credits: 6, category: "common-core", prerequisites: [] },
+    { code: "CCCH____", name: "Common Core: China — Culture, State & Society", credits: 6, category: "common-core", prerequisites: [] },
+    { code: "CCAI____", name: "Common Core: Artificial Intelligence", credits: 6, category: "common-core", prerequisites: [] },
+    { code: "CC______", name: "Common Core: Additional", credits: 6, category: "common-core", prerequisites: [] },
+
+    // === Free Electives ===
+    { code: "ELEC0001", name: "Free Elective 1", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC0002", name: "Free Elective 2", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC0003", name: "Free Elective 3", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC0004", name: "Free Elective 4", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC0005", name: "Free Elective 5", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC0006", name: "Free Elective 6", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC0007", name: "Free Elective 7", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC0008", name: "Free Elective 8", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC0009", name: "Free Elective 9", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC0010", name: "Free Elective 10", credits: 6, category: "free-elective", prerequisites: [] },
+];
+
+// Category display names
+const CATEGORY_NAMES = {
+    "math-core": "Math Core",
+    "math-adv-core": "Advanced Core",
+    "math-elec-a": "Elective List A",
+    "math-elec-b": "Elective List B",
+    "math-capstone": "Capstone",
+    "science": "Science Foundation",
+    "common-core": "Common Core",
+    "language": "Language",
+    "second-major": "2nd Major / Minor",
+    "free-elective": "Free Elective"
+};
+
+// ==================== Second Major / Minor Presets ====================
+const PROGRAM_PRESETS = {
+
+    // ==================== DOUBLE MAJOR OPTIONS ====================
+
+    "cs-major": {
+        name: "Computer Science",
+        type: "double",
+        credits: 84,
+        overlapNote: "MATH3600 (Discrete Math) can substitute COMP2121. Max 24cr overlap for double major.",
+        courses: [
+            { code: "COMP1117", name: "Computer Programming", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "COMP2113", name: "Programming Technologies", credits: 6, category: "second-major", prerequisites: ["COMP1117"] },
+            { code: "COMP2119", name: "Intro to Data Structures and Algorithms", credits: 6, category: "second-major", prerequisites: ["COMP1117"] },
+            { code: "COMP2120", name: "Computer Organization", credits: 6, category: "second-major", prerequisites: ["COMP1117"] },
+            { code: "COMP2121", name: "Discrete Mathematics (CS)", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "COMP2396", name: "Object-Oriented Programming and Java", credits: 6, category: "second-major", prerequisites: ["COMP2113"] },
+            { code: "COMP2501", name: "Intro to Data Science and Engineering", credits: 6, category: "second-major", prerequisites: ["COMP1117"] },
+            { code: "COMP3230", name: "Principles of Operating Systems", credits: 6, category: "second-major", prerequisites: ["COMP2119", "COMP2120"] },
+            { code: "COMP3234", name: "Computer and Communication Networks", credits: 6, category: "second-major", prerequisites: ["COMP2119"] },
+            { code: "COMP3251", name: "Algorithm Design", credits: 6, category: "second-major", prerequisites: ["COMP2119"] },
+            { code: "COMP3252", name: "Algorithm Design and Analysis", credits: 6, category: "second-major", prerequisites: ["COMP2119"] },
+            { code: "COMP3297", name: "Software Engineering", credits: 6, category: "second-major", prerequisites: ["COMP2396"] },
+            { code: "COMP3314", name: "Machine Learning", credits: 6, category: "second-major", prerequisites: ["COMP2119"] },
+            { code: "COMP3317", name: "Computer Vision", credits: 6, category: "second-major", prerequisites: ["COMP2119"] },
+            { code: "COMP3340", name: "Applied Deep Learning", credits: 6, category: "second-major", prerequisites: ["COMP2119"] },
+            { code: "COMP3353", name: "Multimedia Computing and Applications", credits: 6, category: "second-major", prerequisites: ["COMP2119"] },
+            { code: "COMP3356", name: "Robot Perception and Intelligence", credits: 6, category: "second-major", prerequisites: ["COMP2119"] },
+            { code: "COMP3358", name: "Distributed and Parallel Computing", credits: 6, category: "second-major", prerequisites: ["COMP2119"] },
+            { code: "COMP4805", name: "CS Project (Non-BEng Capstone)", credits: 6, category: "second-major", prerequisites: [] },
+        ]
+    },
+
+    "econ-major": {
+        name: "Economics",
+        type: "double",
+        credits: 72,
+        overlapNote: "Faculty Core (24cr) can be double-counted in major-major. MATH1013 overlaps with Math major. Capstone: ECON4200.",
+        courses: [
+            // Faculty Core (24 cr)
+            { code: "ACCT1101", name: "Introduction to Financial Accounting", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ECON1210", name: "Introductory Microeconomics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "FINA1310", name: "Corporate Finance", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ECON1280", name: "Analysis of Economic Data", credits: 6, category: "second-major", prerequisites: [] },
+            // Disciplinary Core (30 cr)
+            { code: "ECON1220", name: "Introductory Macroeconomics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ECON2210", name: "Intermediate Microeconomics", credits: 6, category: "second-major", prerequisites: ["ECON1210"] },
+            { code: "ECON2220", name: "Intermediate Macroeconomics", credits: 6, category: "second-major", prerequisites: ["ECON1220"] },
+            { code: "ECON2280", name: "Introductory Econometrics", credits: 6, category: "second-major", prerequisites: ["ECON1210"] },
+            // Electives
+            { code: "ECON2214", name: "Games and Decisions", credits: 6, category: "second-major", prerequisites: ["ECON1210"] },
+            { code: "ECON2226", name: "Chinese Economy", credits: 6, category: "second-major", prerequisites: ["ECON1210"] },
+            { code: "ECON2252", name: "Theory of International Trade", credits: 6, category: "second-major", prerequisites: ["ECON1210"] },
+            { code: "ECON3222", name: "Monetary Economics", credits: 6, category: "second-major", prerequisites: ["ECON2220"] },
+            { code: "ECON3225", name: "Big Data Economics", credits: 6, category: "second-major", prerequisites: ["ECON2280"] },
+            { code: "ECON3234", name: "Behavioural Economics", credits: 6, category: "second-major", prerequisites: ["ECON2210"] },
+            { code: "ECON3284", name: "Intro to Causal Inference and Statistical Learning", credits: 6, category: "second-major", prerequisites: ["ECON2280"] },
+            { code: "ECON4211", name: "Advanced Microeconomics", credits: 6, category: "second-major", prerequisites: ["ECON2210"] },
+            { code: "ECON4221", name: "Advanced Macroeconomics", credits: 6, category: "second-major", prerequisites: ["ECON2220"] },
+            // Capstone
+            { code: "ECON4200", name: "Senior Seminar in Economics and Finance", credits: 6, category: "second-major", prerequisites: [] },
+        ]
+    },
+
+    "fina-major": {
+        name: "Finance",
+        type: "double",
+        credits: 78,
+        overlapNote: "Faculty Core (24cr) can be double-counted in major-major. MATH1013 overlaps with Math major. Capstone: ECON4200.",
+        courses: [
+            // Faculty Core (24 cr)
+            { code: "ACCT1101", name: "Introduction to Financial Accounting", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ECON1210", name: "Introductory Microeconomics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "FINA1310", name: "Corporate Finance", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ECON1280", name: "Analysis of Economic Data", credits: 6, category: "second-major", prerequisites: [] },
+            // Disciplinary Core (36 cr)
+            { code: "ECON1220", name: "Introductory Macroeconomics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ECON2280", name: "Introductory Econometrics", credits: 6, category: "second-major", prerequisites: ["ECON1210"] },
+            { code: "FINA2320", name: "Investments and Portfolio Analysis", credits: 6, category: "second-major", prerequisites: ["FINA1310"] },
+            { code: "FINA2322", name: "Derivatives", credits: 6, category: "second-major", prerequisites: ["FINA1310"] },
+            // Electives (18 cr)
+            { code: "FINA2311", name: "Case Studies in Corporate Finance", credits: 6, category: "second-major", prerequisites: ["FINA1310"] },
+            { code: "FINA2312", name: "Advanced Corporate Finance", credits: 6, category: "second-major", prerequisites: ["FINA1310"] },
+            { code: "FINA2330", name: "Financial Markets and Institutions", credits: 6, category: "second-major", prerequisites: ["FINA1310"] },
+            { code: "FINA3337", name: "Venture Capital and Private Equity", credits: 6, category: "second-major", prerequisites: ["FINA2320"] },
+            { code: "FINA3350", name: "Mathematical Finance", credits: 6, category: "second-major", prerequisites: ["FINA2322"] },
+            { code: "FINA3381", name: "Behavioural Finance", credits: 6, category: "second-major", prerequisites: ["FINA2320"] },
+            { code: "FINA4354", name: "Financial Engineering", credits: 6, category: "second-major", prerequisites: ["FINA2322"] },
+            { code: "FINA4350", name: "Text Analytics and NLP in Finance", credits: 6, category: "second-major", prerequisites: [] },
+            // Capstone
+            { code: "ECON4200", name: "Senior Seminar in Economics and Finance", credits: 6, category: "second-major", prerequisites: [] },
+        ]
+    },
+
+    "stat-major": {
+        name: "Statistics",
+        type: "double",
+        credits: 96,
+        overlapNote: "SCNC1111/1112 overlap with Math major (max 24cr double-count). MATH1013 may overlap. Cannot combine with Decision Analytics or Risk Management.",
+        courses: [
+            // Introductory Core (18 cr)
+            { code: "STAT1600", name: "Statistics: Ideas and Concepts", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "STAT2601", name: "Probability and Statistics I", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
+            { code: "STAT2602", name: "Probability and Statistics II", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT2604", name: "Intro to R/Python Programming and Data Analysis", credits: 6, category: "second-major", prerequisites: [] },
+            // Advanced Core (12 cr)
+            { code: "STAT3600", name: "Linear Statistical Analysis", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT4602", name: "Multivariate Data Analysis", credits: 6, category: "second-major", prerequisites: ["STAT3600"] },
+            // List A Electives
+            { code: "STAT3602", name: "Statistical Inference", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3621", name: "Statistical Data Analysis", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT4610", name: "Bayesian Learning", credits: 6, category: "second-major", prerequisites: ["STAT3602"] },
+            // List B Electives
+            { code: "STAT3603", name: "Stochastic Processes", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3612", name: "Statistical Machine Learning", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3620", name: "Modern Nonparametric Statistics", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3655", name: "Survival Analysis", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT4601", name: "Time-Series Analysis", credits: 6, category: "second-major", prerequisites: ["STAT3600"] },
+            // List C Electives
+            { code: "STAT3604", name: "Design and Analysis of Experiments", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3613", name: "Marketing Analytics", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3617", name: "Sample Survey Methods", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3021", name: "Modern Biostatistics", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            // Capstone
+            { code: "STAT3799", name: "Directed Studies in Statistics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "STAT4710", name: "Capstone Experience for Statistics", credits: 6, category: "second-major", prerequisites: [] },
+        ]
+    },
+
+    "rm-major": {
+        name: "Risk Management",
+        type: "double",
+        credits: 90,
+        overlapNote: "MATH1013 overlaps with Math major. Cannot combine with Statistics or Decision Analytics major.",
+        courses: [
+            // Introductory (30 cr)
+            { code: "STAT1600", name: "Statistics: Ideas and Concepts", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "STAT2601", name: "Probability and Statistics I", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
+            { code: "STAT2602", name: "Probability and Statistics II", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            // Advanced Core (42 cr)
+            { code: "STAT3600", name: "Linear Statistical Analysis", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3609", name: "The Statistics of Investment Risk", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3615", name: "Practical Mathematics for Investment", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3618", name: "Derivatives and Risk Management", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT4601", name: "Time-Series Analysis", credits: 6, category: "second-major", prerequisites: ["STAT3600"] },
+            { code: "STAT4607", name: "Credit Risk Analysis", credits: 6, category: "second-major", prerequisites: ["STAT3600"] },
+            { code: "STAT4608", name: "Market Risk Analysis", credits: 6, category: "second-major", prerequisites: ["STAT3600"] },
+            // Electives (12 cr)
+            { code: "STAT3602", name: "Statistical Inference", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3603", name: "Stochastic Processes", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3610", name: "Risk Management and Insurance", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3612", name: "Statistical Machine Learning", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT4603", name: "Current Topics in Risk Management", credits: 6, category: "second-major", prerequisites: ["STAT3609"] },
+            { code: "STAT4606", name: "Risk Management and Basel Accords", credits: 6, category: "second-major", prerequisites: ["STAT3609"] },
+            // Capstone
+            { code: "STAT4710", name: "Capstone Experience for Statistics", credits: 6, category: "second-major", prerequisites: [] },
+        ]
+    },
+
+    "da-major": {
+        name: "Decision Analytics",
+        type: "double",
+        credits: 96,
+        overlapNote: "SCNC1111/1112 and MATH1013 overlap with Math major (max 24cr double-count). MATH3904 overlaps with Math elective. Cannot combine with Statistics or Risk Management.",
+        courses: [
+            // Introductory Core (36 cr — some overlap with Math)
+            { code: "COMP1117", name: "Computer Programming", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "COMP2119", name: "Intro to Data Structures and Algorithms", credits: 6, category: "second-major", prerequisites: ["COMP1117"] },
+            { code: "STAT2601", name: "Probability and Statistics I", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
+            { code: "STAT2602", name: "Probability and Statistics II", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            // Advanced Core (30 cr)
+            { code: "COMP3278", name: "Intro to Database Management Systems", credits: 6, category: "second-major", prerequisites: ["COMP2119"] },
+            { code: "STAT3600", name: "Linear Statistical Analysis", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3612", name: "Statistical Machine Learning", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT4609", name: "Big Data Analytics", credits: 6, category: "second-major", prerequisites: ["STAT3600"] },
+            // Advanced Electives (12 cr)
+            { code: "COMP3270", name: "Artificial Intelligence", credits: 6, category: "second-major", prerequisites: ["COMP2119"] },
+            { code: "STAT3010", name: "Image Processing and Computer Vision", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3620", name: "Modern Nonparametric Statistics", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3621", name: "Statistical Data Analysis", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3622", name: "Data Visualization", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT4601", name: "Time-Series Analysis", credits: 6, category: "second-major", prerequisites: ["STAT3600"] },
+            { code: "STAT4602", name: "Multivariate Data Analysis", credits: 6, category: "second-major", prerequisites: ["STAT3600"] },
+            { code: "STAT4610", name: "Bayesian Learning", credits: 6, category: "second-major", prerequisites: ["STAT3602"] },
+            // Capstone
+            { code: "STAT4710", name: "Capstone Experience for Statistics", credits: 6, category: "second-major", prerequisites: [] },
+        ]
+    },
+
+    "phys-major": {
+        name: "Physics",
+        type: "double",
+        credits: 96,
+        overlapNote: "SCNC1111/1112 overlap with Math major (max 24cr double-count). Requires HKDSE Physics Level 3+.",
+        courses: [
+            // Introductory Core (24 cr)
+            { code: "PHYS2250", name: "Introductory Mechanics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "PHYS2255", name: "Introductory Electricity and Magnetism", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "PHYS2261", name: "Introductory Heat and Thermodynamics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "PHYS2265", name: "Introductory Quantum Physics", credits: 6, category: "second-major", prerequisites: [] },
+            // Introductory Electives (12 cr)
+            { code: "PHYS1150", name: "Problem Solving in Physics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "PHYS2055", name: "Introductory Relativity", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "PHYS2150", name: "Methods in Physics I", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "PHYS2155", name: "Methods in Physics II", credits: 6, category: "second-major", prerequisites: ["PHYS2150"] },
+            { code: "PHYS2160", name: "Introductory Computational Physics", credits: 6, category: "second-major", prerequisites: [] },
+            // Advanced Core — List A (24 cr)
+            { code: "PHYS3150", name: "Theoretical Physics", credits: 6, category: "second-major", prerequisites: ["PHYS2265"] },
+            { code: "PHYS3350", name: "Classical Mechanics", credits: 6, category: "second-major", prerequisites: ["PHYS2250"] },
+            { code: "PHYS3351", name: "Quantum Mechanics", credits: 6, category: "second-major", prerequisites: ["PHYS2265"] },
+            { code: "PHYS3450", name: "Electromagnetism", credits: 6, category: "second-major", prerequisites: ["PHYS2255"] },
+            { code: "PHYS3550", name: "Statistical Mechanics and Thermodynamics", credits: 6, category: "second-major", prerequisites: ["PHYS2261"] },
+            { code: "PHYS3760", name: "Physics Laboratory", credits: 6, category: "second-major", prerequisites: [] },
+            // Advanced Electives — List B
+            { code: "PHYS3151", name: "Machine Learning in Physics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "PHYS3653", name: "Astrophysics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "PHYS3850", name: "Physical Optics", credits: 6, category: "second-major", prerequisites: ["PHYS2255"] },
+            { code: "PHYS3851", name: "Atomic and Nuclear Physics", credits: 6, category: "second-major", prerequisites: ["PHYS2265"] },
+            { code: "PHYS4351", name: "Advanced Quantum Mechanics", credits: 6, category: "second-major", prerequisites: ["PHYS3351"] },
+            { code: "PHYS4450", name: "Advanced Electromagnetism", credits: 6, category: "second-major", prerequisites: ["PHYS3450"] },
+            { code: "PHYS4551", name: "Solid State Physics", credits: 6, category: "second-major", prerequisites: ["PHYS3351"] },
+            { code: "PHYS4654", name: "General Relativity", credits: 6, category: "second-major", prerequisites: ["PHYS3150"] },
+            { code: "PHYS4850", name: "Particle Physics", credits: 6, category: "second-major", prerequisites: ["PHYS3351"] },
+            // Capstone
+            { code: "PHYS3999", name: "Directed Studies in Physics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "PHYS4999", name: "Physics Project", credits: 12, category: "second-major", prerequisites: [] },
+        ]
+    },
+
+    // ==================== MINOR OPTIONS ====================
+
+    "cs-minor": {
+        name: "Computer Science",
+        type: "minor",
+        credits: 42,
+        overlapNote: "No double-counting between major and minor. If a course overlaps, take a replacement elective.",
+        courses: [
+            { code: "COMP1117", name: "Computer Programming", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "COMP2113", name: "Programming Technologies", credits: 6, category: "second-major", prerequisites: ["COMP1117"] },
+            { code: "COMP2119", name: "Intro to Data Structures and Algorithms", credits: 6, category: "second-major", prerequisites: ["COMP1117"] },
+            { code: "COMP2120", name: "Computer Organization", credits: 6, category: "second-major", prerequisites: ["COMP1117"] },
+            { code: "COMP2121", name: "Discrete Mathematics (CS)", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "COMP2396", name: "Object-Oriented Programming and Java", credits: 6, category: "second-major", prerequisites: ["COMP2113"] },
+            { code: "COMP2501", name: "Intro to Data Science and Engineering", credits: 6, category: "second-major", prerequisites: ["COMP1117"] },
+            { code: "COMP3230", name: "Principles of Operating Systems", credits: 6, category: "second-major", prerequisites: ["COMP2119", "COMP2120"] },
+            { code: "COMP3234", name: "Computer and Communication Networks", credits: 6, category: "second-major", prerequisites: ["COMP2119"] },
+            { code: "COMP3251", name: "Algorithm Design", credits: 6, category: "second-major", prerequisites: ["COMP2119"] },
+            { code: "COMP3314", name: "Machine Learning", credits: 6, category: "second-major", prerequisites: ["COMP2119"] },
+        ]
+    },
+
+    "stat-minor": {
+        name: "Statistics",
+        type: "minor",
+        credits: 42,
+        overlapNote: "Cannot combine with majors in Computing & Data Analytics, Decision Analytics, Risk Management, or Statistics.",
+        courses: [
+            { code: "STAT1018", name: "Foundations of Data Science", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "STAT2601", name: "Probability and Statistics I", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
+            { code: "STAT2602", name: "Probability and Statistics II", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT2604", name: "Intro to R/Python Programming and Data Analysis", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "STAT3600", name: "Linear Statistical Analysis", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3602", name: "Statistical Inference", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3603", name: "Stochastic Processes", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3604", name: "Design and Analysis of Experiments", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3612", name: "Statistical Machine Learning", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3613", name: "Marketing Analytics", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3617", name: "Sample Survey Methods", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3620", name: "Modern Nonparametric Statistics", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3621", name: "Statistical Data Analysis", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3655", name: "Survival Analysis", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT4601", name: "Time-Series Analysis", credits: 6, category: "second-major", prerequisites: ["STAT3600"] },
+            { code: "STAT4602", name: "Multivariate Data Analysis", credits: 6, category: "second-major", prerequisites: ["STAT3600"] },
+            { code: "STAT4610", name: "Bayesian Learning", credits: 6, category: "second-major", prerequisites: ["STAT3602"] },
+        ]
+    },
+
+    "phys-minor": {
+        name: "Physics",
+        type: "minor",
+        credits: 42,
+        overlapNote: "Requires Level 3+ in HKDSE Physics or equivalent.",
+        courses: [
+            { code: "PHYS1250", name: "Fundamental Physics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "PHYS1150", name: "Problem Solving in Physics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "PHYS2055", name: "Introductory Relativity", credits: 6, category: "second-major", prerequisites: ["PHYS1250"] },
+            { code: "PHYS2150", name: "Methods in Physics I", credits: 6, category: "second-major", prerequisites: ["PHYS1250"] },
+            { code: "PHYS2155", name: "Methods in Physics II", credits: 6, category: "second-major", prerequisites: ["PHYS2150"] },
+            { code: "PHYS2250", name: "Introductory Mechanics", credits: 6, category: "second-major", prerequisites: ["PHYS1250"] },
+            { code: "PHYS2255", name: "Introductory Electricity and Magnetism", credits: 6, category: "second-major", prerequisites: ["PHYS1250"] },
+            { code: "PHYS2261", name: "Introductory Heat and Thermodynamics", credits: 6, category: "second-major", prerequisites: ["PHYS1250"] },
+            { code: "PHYS2265", name: "Introductory Quantum Physics", credits: 6, category: "second-major", prerequisites: ["PHYS1250"] },
+            { code: "PHYS3150", name: "Quantum Mechanics I", credits: 6, category: "second-major", prerequisites: ["PHYS2265"] },
+            { code: "PHYS3351", name: "Electromagnetism", credits: 6, category: "second-major", prerequisites: ["PHYS2255"] },
+            { code: "PHYS3450", name: "Solid State Physics", credits: 6, category: "second-major", prerequisites: ["PHYS2265"] },
+            { code: "PHYS3550", name: "Statistical Mechanics", credits: 6, category: "second-major", prerequisites: ["PHYS2261"] },
+            { code: "PHYS3650", name: "Astrophysics", credits: 6, category: "second-major", prerequisites: ["PHYS1250"] },
+            { code: "PHYS3750", name: "Optics", credits: 6, category: "second-major", prerequisites: ["PHYS2255"] },
+        ]
+    },
+
+    "econ-minor": {
+        name: "Economics",
+        type: "minor",
+        credits: 36,
+        overlapNote: "MATH1013 overlaps with Economics minor requirement. No double-counting for major-minor — take a replacement elective.",
+        courses: [
+            { code: "ECON1210", name: "Introductory Microeconomics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ECON1220", name: "Introductory Macroeconomics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ECON2210", name: "Intermediate Microeconomics", credits: 6, category: "second-major", prerequisites: ["ECON1210"] },
+            { code: "ECON2220", name: "Intermediate Macroeconomics", credits: 6, category: "second-major", prerequisites: ["ECON1220"] },
+            { code: "ECON2246", name: "Game Theory in Economics", credits: 6, category: "second-major", prerequisites: ["ECON1210"] },
+            { code: "ECON2274", name: "Money and Banking", credits: 6, category: "second-major", prerequisites: ["ECON1220"] },
+            { code: "ECON2280", name: "Introductory Econometrics", credits: 6, category: "second-major", prerequisites: ["ECON1210"] },
+            { code: "ECON3210", name: "Advanced Microeconomics", credits: 6, category: "second-major", prerequisites: ["ECON2210"] },
+            { code: "ECON3220", name: "Advanced Macroeconomics", credits: 6, category: "second-major", prerequisites: ["ECON2220"] },
+        ]
+    },
+
+    "fina-minor": {
+        name: "Finance",
+        type: "minor",
+        credits: 36,
+        overlapNote: "No double-counting for major-minor. Faculty Core courses cannot be shared with Math major.",
+        courses: [
+            // Faculty Core (24 cr)
+            { code: "ACCT1101", name: "Introduction to Financial Accounting", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ECON1210", name: "Introductory Microeconomics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "FINA1310", name: "Corporate Finance", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ECON1280", name: "Analysis of Economic Data", credits: 6, category: "second-major", prerequisites: [] },
+            // Additional Required
+            { code: "ECON1220", name: "Introductory Macroeconomics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "FINA2320", name: "Investments and Portfolio Analysis", credits: 6, category: "second-major", prerequisites: ["FINA1310"] },
+            // Electives
+            { code: "FINA2322", name: "Derivatives", credits: 6, category: "second-major", prerequisites: ["FINA1310"] },
+            { code: "FINA2330", name: "Financial Markets and Institutions", credits: 6, category: "second-major", prerequisites: ["FINA1310"] },
+            { code: "FINA2331", name: "Management of Commercial Banks", credits: 6, category: "second-major", prerequisites: ["FINA1310"] },
+            { code: "FINA2342", name: "Insurance: Theory and Practice", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ACCT3114", name: "Valuation Using Financial Statements", credits: 6, category: "second-major", prerequisites: ["ACCT1101"] },
+        ]
+    },
+
+    "rm-minor": {
+        name: "Risk Management",
+        type: "minor",
+        credits: 42,
+        overlapNote: "Cannot combine with Statistics or Decision Analytics major.",
+        courses: [
+            { code: "STAT2601", name: "Probability and Statistics I", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
+            { code: "STAT2602", name: "Probability and Statistics II", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT2604", name: "Intro to R/Python Programming and Data Analysis", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "STAT3609", name: "The Statistics of Investment Risk", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3610", name: "Risk Management and Insurance", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3612", name: "Statistical Machine Learning", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3615", name: "Practical Mathematics for Investment", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT3618", name: "Derivatives and Risk Management", credits: 6, category: "second-major", prerequisites: ["STAT2601"] },
+            { code: "STAT4601", name: "Time-Series Analysis", credits: 6, category: "second-major", prerequisites: ["STAT3600"] },
+            { code: "STAT4603", name: "Current Topics in Risk Management", credits: 6, category: "second-major", prerequisites: ["STAT3609"] },
+            { code: "STAT4606", name: "Risk Management and Basel Accords", credits: 6, category: "second-major", prerequisites: ["STAT3609"] },
+            { code: "STAT4607", name: "Credit Risk Analysis", credits: 6, category: "second-major", prerequisites: ["STAT3600"] },
+            { code: "STAT4608", name: "Market Risk Analysis", credits: 6, category: "second-major", prerequisites: ["STAT3600"] },
+        ]
+    },
+};

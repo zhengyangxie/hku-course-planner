@@ -1,0 +1,486 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f0f2f5;
+    color: #333;
+    min-height: 100vh;
+}
+
+header {
+    background: linear-gradient(135deg, #1a5276, #2e86c1);
+    color: white;
+    padding: 20px 30px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 1.8rem;
+    margin-bottom: 4px;
+}
+
+.subtitle {
+    opacity: 0.85;
+    font-size: 0.95rem;
+}
+
+/* ============ Program Section ============ */
+.program-section {
+    display: flex;
+    gap: 24px;
+    padding: 20px 30px;
+    align-items: flex-start;
+}
+
+.program-pool {
+    flex: 1;
+    background: white;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.program-pool h2, .my-degree h2 {
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+}
+
+.hint {
+    font-size: 0.78rem;
+    color: #999;
+    margin-bottom: 12px;
+}
+
+.program-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.program-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    min-width: 180px;
+}
+
+.program-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    border-color: #2e86c1;
+}
+
+.program-card:active {
+    cursor: grabbing;
+}
+
+.program-card.placed {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+.program-card .p-icon {
+    font-size: 1.5rem;
+}
+
+.program-card .p-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.program-card .p-name {
+    font-weight: 700;
+    font-size: 0.88rem;
+}
+
+.program-card .p-meta {
+    font-size: 0.75rem;
+    color: #888;
+}
+
+.program-card.type-major { border-left: 4px solid #e74c3c; }
+.program-card.type-minor { border-left: 4px solid #8e44ad; }
+
+/* My Degree */
+.my-degree {
+    min-width: 320px;
+    background: white;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.program-drop-zone {
+    min-height: 70px;
+    border: 2px dashed #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.program-drop-zone.drag-over {
+    background: #eaf4fd;
+    border-color: #2e86c1;
+}
+
+.program-tag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #f0f7ff;
+    border: 1px solid #bdd7ee;
+    font-size: 0.85rem;
+    position: relative;
+}
+
+.program-tag.fixed {
+    background: #fde8e8;
+    border-color: #e8b4b4;
+}
+
+.program-tag .program-tag-icon {
+    font-size: 1.2rem;
+}
+
+.program-tag .program-tag-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.program-tag .program-tag-info strong {
+    font-size: 0.85rem;
+}
+
+.program-tag .program-tag-info span {
+    font-size: 0.72rem;
+    color: #888;
+}
+
+.program-tag .remove-program {
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    background: none;
+    border: none;
+    color: #ccc;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 2px;
+    line-height: 1;
+}
+
+.program-tag .remove-program:hover {
+    color: #e74c3c;
+}
+
+.overlap-note {
+    font-size: 0.78rem;
+    color: #856404;
+    background: #fff8e1;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border-left: 3px solid #f39c12;
+    margin-top: 10px;
+}
+
+/* ============ Dashboard ============ */
+.dashboard {
+    display: flex;
+    gap: 16px;
+    padding: 0 30px 20px;
+    flex-wrap: wrap;
+}
+
+.progress-card {
+    flex: 1;
+    min-width: 150px;
+    background: white;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.progress-card h3 {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.progress-bar {
+    height: 8px;
+    background: #e8e8e8;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #2e86c1;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.progress-fill.major { background: #e74c3c; }
+.progress-fill.second { background: #8e44ad; }
+
+#program-cards-container {
+    display: contents;
+}
+
+#program-cards-container .progress-card {
+    flex: 1;
+    min-width: 150px;
+}
+.progress-fill.cc { background: #27ae60; }
+.progress-fill.lang { background: #f39c12; }
+
+/* ============ Main Layout ============ */
+.main-container {
+    display: flex;
+    gap: 20px;
+    padding: 0 30px 20px;
+    align-items: flex-start;
+}
+
+/* Course Pool */
+.course-pool {
+    width: 300px;
+    flex-shrink: 0;
+    background: white;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 20px;
+}
+
+.course-pool h2 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+}
+
+.filter-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.filter-bar select, .filter-bar input {
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.85rem;
+}
+
+.course-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-right: 4px;
+}
+
+/* Course Cards */
+.course-card {
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: grab;
+    font-size: 0.82rem;
+    border-left: 4px solid #ccc;
+    background: #fafafa;
+    transition: transform 0.15s, box-shadow 0.15s;
+    user-select: none;
+}
+
+.course-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+}
+
+.course-card:active { cursor: grabbing; }
+
+.course-card .code { font-weight: 700; font-size: 0.85rem; }
+.course-card .name { color: #555; margin-top: 2px; }
+
+.course-card .credits-badge {
+    display: inline-block;
+    background: #e8e8e8;
+    border-radius: 10px;
+    padding: 1px 8px;
+    font-size: 0.75rem;
+    margin-top: 4px;
+    color: #666;
+}
+
+.course-card .prereq-info {
+    font-size: 0.72rem;
+    color: #999;
+    margin-top: 3px;
+}
+
+/* Category Colors */
+.course-card[data-category="math-core"] { border-left-color: #e74c3c; }
+.course-card[data-category="math-adv-core"] { border-left-color: #c0392b; }
+.course-card[data-category="math-elec-a"] { border-left-color: #e67e22; }
+.course-card[data-category="math-elec-b"] { border-left-color: #f39c12; }
+.course-card[data-category="math-capstone"] { border-left-color: #8e44ad; }
+.course-card[data-category="science"] { border-left-color: #16a085; }
+.course-card[data-category="common-core"] { border-left-color: #27ae60; }
+.course-card[data-category="language"] { border-left-color: #2980b9; }
+.course-card[data-category="second-major"] { border-left-color: #8e44ad; }
+.course-card[data-category="free-elective"] { border-left-color: #95a5a6; }
+
+.course-card.placed { opacity: 0.4; pointer-events: none; }
+.course-card.prereq-warning { border-color: #e74c3c; background: #fdf0f0; }
+
+/* ============ Planner Grid ============ */
+.planner-grid { flex: 1; }
+.planner-grid h2 { font-size: 1.1rem; margin-bottom: 12px; }
+
+.years-container { display: flex; flex-direction: column; gap: 16px; }
+
+.year-block h3 {
+    font-size: 0.95rem;
+    color: #1a5276;
+    margin-bottom: 8px;
+    padding-left: 4px;
+}
+
+.semesters { display: flex; gap: 12px; }
+
+.semester {
+    flex: 1;
+    background: white;
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    min-height: 160px;
+    transition: background 0.2s;
+}
+
+.semester.drag-over { background: #eaf4fd; outline: 2px dashed #2e86c1; }
+
+.semester h4 {
+    font-size: 0.85rem; color: #666;
+    margin-bottom: 10px; padding-bottom: 6px;
+    border-bottom: 1px solid #eee;
+}
+
+.semester-courses { display: flex; flex-direction: column; gap: 6px; min-height: 80px; }
+.semester-courses .course-card { position: relative; }
+
+.semester-courses .course-card .remove-btn {
+    position: absolute; top: 4px; right: 6px;
+    background: none; border: none; color: #ccc;
+    cursor: pointer; font-size: 1rem; line-height: 1; padding: 2px;
+}
+.semester-courses .course-card .remove-btn:hover { color: #e74c3c; }
+
+.semester-credits { margin-top: 10px; font-size: 0.78rem; color: #888; text-align: right; }
+.semester-credits.overload { color: #e74c3c; font-weight: 700; }
+
+/* ============ Warnings ============ */
+.warnings-panel {
+    margin: 0 30px 20px; background: #fff8e1;
+    border-radius: 10px; padding: 16px; border-left: 4px solid #f39c12;
+}
+.warnings-panel h3 { font-size: 0.95rem; margin-bottom: 8px; color: #e67e22; }
+.warnings-panel ul { list-style: none; font-size: 0.85rem; }
+.warnings-panel li { padding: 4px 0; color: #856404; }
+
+/* ============ Graduation ============ */
+.graduation-check { padding: 0 30px 20px; text-align: center; }
+
+.btn-check {
+    padding: 12px 32px; background: #1a5276; color: white;
+    border: none; border-radius: 8px; font-size: 1rem;
+    cursor: pointer; transition: background 0.2s;
+}
+.btn-check:hover { background: #2e86c1; }
+
+.graduation-result {
+    margin-top: 16px; background: white; border-radius: 10px;
+    padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    text-align: left; font-size: 0.9rem;
+}
+.graduation-result .pass { color: #27ae60; }
+.graduation-result .fail { color: #e74c3c; }
+.graduation-result ul { list-style: none; margin-top: 10px; }
+.graduation-result li { padding: 6px 0; border-bottom: 1px solid #f0f0f0; }
+
+/* ============ Actions ============ */
+.actions-bar {
+    display: flex; gap: 10px; padding: 0 30px 30px;
+    justify-content: center; flex-wrap: wrap;
+}
+
+.btn-action {
+    padding: 10px 20px; border: 1px solid #ddd; border-radius: 8px;
+    background: white; cursor: pointer; font-size: 0.85rem; transition: background 0.2s;
+}
+.btn-action:hover { background: #f0f0f0; }
+.btn-danger { color: #e74c3c; border-color: #e74c3c; }
+.btn-danger:hover { background: #fdf0f0; }
+
+.btn-add-custom {
+    width: 100%; margin-top: 10px; padding: 8px;
+    border: 2px dashed #ccc; border-radius: 8px;
+    background: transparent; cursor: pointer; color: #888;
+    font-size: 0.85rem; transition: all 0.2s;
+}
+.btn-add-custom:hover { border-color: #2e86c1; color: #2e86c1; }
+
+/* ============ Modal ============ */
+.modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.4); display: flex;
+    align-items: center; justify-content: center; z-index: 1000;
+}
+.modal-content {
+    background: white; border-radius: 12px; padding: 24px;
+    width: 380px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+.modal-content h3 { margin-bottom: 16px; }
+.modal-content label { display: block; margin-bottom: 12px; font-size: 0.85rem; color: #555; }
+.modal-content input, .modal-content select {
+    width: 100%; padding: 8px 10px; border: 1px solid #ddd;
+    border-radius: 6px; margin-top: 4px; font-size: 0.85rem;
+}
+.modal-actions { display: flex; gap: 10px; margin-top: 16px; justify-content: flex-end; }
+
+/* Scrollbar */
+.course-list::-webkit-scrollbar { width: 5px; }
+.course-list::-webkit-scrollbar-track { background: #f0f0f0; border-radius: 3px; }
+.course-list::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+    .main-container { flex-direction: column; }
+    .course-pool { width: 100%; max-height: 300px; position: static; }
+    .semesters { flex-direction: column; }
+    .program-section { flex-direction: column; }
+    .my-degree { min-width: 100%; }
+}
