@@ -175,11 +175,16 @@ function removeProgram(key) {
 
 // ==================== Rendering ====================
 function getAllCourses() {
-    // Deduplicate: base courses take priority, then preset, then custom
+    // Deduplicate: preset courses override base courses (so active program courses show as second-major),
+    // then remaining base courses, then custom courses
+    const presetCodeSet = new Set(presetCourses.map(c => c.code));
     const seen = new Set();
     const result = [];
-    for (const c of COURSES) { seen.add(c.code); result.push(c); }
-    for (const c of presetCourses) { if (!seen.has(c.code)) { seen.add(c.code); result.push(c); } }
+    // Active program courses first (as second-major)
+    for (const c of presetCourses) { seen.add(c.code); result.push(c); }
+    // Base courses that aren't overridden by presets
+    for (const c of COURSES) { if (!seen.has(c.code)) { seen.add(c.code); result.push(c); } }
+    // Custom courses
     for (const c of customCourses) { if (!seen.has(c.code)) { seen.add(c.code); result.push(c); } }
     return result;
 }
