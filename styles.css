@@ -251,6 +251,7 @@ header h1 {
 }
 .progress-fill.cc { background: #27ae60; }
 .progress-fill.lang { background: #f39c12; }
+.progress-fill.ailt { background: #e056fd; }
 
 /* ============ Main Layout ============ */
 .main-container {
@@ -351,6 +352,7 @@ header h1 {
 .course-card[data-category="common-core"] { border-left-color: #27ae60; }
 .course-card[data-category="language"] { border-left-color: #2980b9; }
 .course-card[data-category="second-major"] { border-left-color: #8e44ad; }
+.course-card[data-category="ai-literacy"] { border-left-color: #e056fd; }
 .course-card[data-category="free-elective"] { border-left-color: #95a5a6; }
 
 .course-card.placed { opacity: 0.4; pointer-events: none; }

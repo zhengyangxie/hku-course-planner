@@ -16,6 +16,7 @@ const CREDIT_CAP = 288;
 const MATH_MAJOR_CREDITS = 96;
 const CC_CREDITS = 36;
 const LANG_CREDITS = 18;
+const AILT_CREDITS = 6;
 
 // ==================== Init ====================
 document.addEventListener("DOMContentLoaded", () => {
@@ -464,7 +465,7 @@ function updateDashboard() {
     const allCourses = getAllCourses();
     const placed = getPlacedCodes();
 
-    let total = 0, major = 0, cc = 0, lang = 0;
+    let total = 0, major = 0, cc = 0, lang = 0, ailt = 0;
 
     for (const code of placed) {
         const course = allCourses.find(c => c.code === code);
@@ -476,17 +477,20 @@ function updateDashboard() {
         }
         if (course.category === "common-core") cc += course.credits;
         if (course.category === "language") lang += course.credits;
+        if (course.category === "ai-literacy") ailt += course.credits;
     }
 
     document.getElementById("total-credits").textContent = total;
     document.getElementById("major-credits").textContent = major;
     document.getElementById("cc-credits").textContent = cc;
     document.getElementById("lang-credits").textContent = lang;
+    document.getElementById("ailt-credits").textContent = ailt;
 
     document.getElementById("total-credits-bar").style.width = Math.min(100, (total / 240) * 100) + "%";
     document.getElementById("major-credits-bar").style.width = Math.min(100, (major / MATH_MAJOR_CREDITS) * 100) + "%";
     document.getElementById("cc-credits-bar").style.width = Math.min(100, (cc / CC_CREDITS) * 100) + "%";
     document.getElementById("lang-credits-bar").style.width = Math.min(100, (lang / LANG_CREDITS) * 100) + "%";
+    document.getElementById("ailt-credits-bar").style.width = Math.min(100, (ailt / AILT_CREDITS) * 100) + "%";
 
     // Dynamic program progress cards
     const container = document.getElementById("program-cards-container");
@@ -586,6 +590,13 @@ function checkGraduation() {
         if (c && c.category === "language") langCredits += c.credits;
     }
     addCheck(`Language Courses: ${langCredits} / ${LANG_CREDITS} credits`, langCredits >= LANG_CREDITS);
+
+    let ailtCredits = 0;
+    for (const code of placed) {
+        const c = allCourses.find(x => x.code === code);
+        if (c && c.category === "ai-literacy") ailtCredits += c.credits;
+    }
+    addCheck(`AI Literacy: ${ailtCredits} / ${AILT_CREDITS} credits`, ailtCredits >= AILT_CREDITS);
 
     // Check each active program
     for (const key of activePrograms) {

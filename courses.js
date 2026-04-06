@@ -51,8 +51,11 @@ const COURSES = [
 
     // === Language ===
     { code: "CAES1000", name: "Core University English", credits: 6, category: "language", prerequisites: [] },
+    { code: "CAES1001", name: "Academic Communication in English", credits: 0, category: "language", prerequisites: [] },
     { code: "CAES9000", name: "English in the Discipline", credits: 6, category: "language", prerequisites: ["CAES1000"] },
-    { code: "CHIN9001", name: "Chinese Language Enhancement", credits: 6, category: "language", prerequisites: [] },
+    { code: "CHIN9001", name: "Practical Chinese for Science Students", credits: 6, category: "language", prerequisites: [] },
+    { code: "CHIN9002", name: "Chinese for Academic Purposes", credits: 6, category: "language", prerequisites: [] },
+    { code: "CHIN9003", name: "Chinese Communication Skills", credits: 6, category: "language", prerequisites: [] },
 
     // === Common Core ===
     { code: "CCST____", name: "Common Core: Scientific & Technological Literacy", credits: 6, category: "common-core", prerequisites: [] },
@@ -61,6 +64,10 @@ const COURSES = [
     { code: "CCCH____", name: "Common Core: China — Culture, State & Society", credits: 6, category: "common-core", prerequisites: [] },
     { code: "CCAI____", name: "Common Core: Artificial Intelligence", credits: 6, category: "common-core", prerequisites: [] },
     { code: "CC______", name: "Common Core: Additional", credits: 6, category: "common-core", prerequisites: [] },
+
+    // === AI Literacy (AILT) ===
+    { code: "AILT1001", name: "AI Literacy I", credits: 6, category: "ai-literacy", prerequisites: [] },
+    { code: "AILT1002", name: "AI Literacy II", credits: 6, category: "ai-literacy", prerequisites: [] },
 
     // === Free Electives — Computer Science ===
     { code: "COMP1117", name: "Computer Programming", credits: 6, category: "free-elective", prerequisites: [] },
@@ -251,6 +258,36 @@ const COURSES = [
     { code: "PHYS7450", name: "Graduate Electromagnetic Field Theory", credits: 6, category: "free-elective", prerequisites: ["PHYS3450"] },
     { code: "PHYS7550", name: "Graduate Statistical Mechanics", credits: 6, category: "free-elective", prerequisites: ["PHYS3550"] },
     { code: "PHYS7750", name: "Physics of Nanoelectronics", credits: 6, category: "free-elective", prerequisites: [] },
+
+    // === Free Electives — Electrical & Electronic Engineering ===
+    { code: "ENGG1310", name: "Electricity and Electronics", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC2147", name: "Electrical Energy Technology", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC2243", name: "Introduction to Electricity and Magnetism", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC2245", name: "Control Systems I", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC2346", name: "Electric Circuit Theory", credits: 6, category: "free-elective", prerequisites: ["ENGG1310"] },
+    { code: "ELEC2347", name: "Fundamentals of Optics", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC2441", name: "Computer Organization and Microprocessors", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC2543", name: "Object-Oriented Programming and Data Structures", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC2544", name: "Introduction to Electronic Commerce and Financial Technology", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC3142", name: "Electrical Energy Conversion", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC3143", name: "Power Electronics", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC3241", name: "Signals and Linear Systems", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC3243", name: "Fundamentals of Next-Generation Communications", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC3244", name: "Digital Signal Processing", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC3248", name: "Engineering Electromagnetism and Antenna Design", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC3249", name: "Pattern Recognition and Machine Intelligence", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC3342", name: "Digital System Design", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC3347", name: "Electronic Materials and Quantum Physics", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC3349", name: "Optical Devices", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC3350", name: "Electronic Circuits and Devices I", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC3351", name: "Electronic Circuits and Devices II", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC3441", name: "Computer Architecture", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC3443", name: "Computer Networks", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC3543", name: "Advanced Systems Programming", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC3544", name: "Introduction to Data Analytics", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC3641", name: "Human Computer Interaction", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC4343", name: "Design of Digital Integrated Circuits", credits: 6, category: "free-elective", prerequisites: [] },
+    { code: "ELEC4344", name: "Advanced Electronic Circuits", credits: 6, category: "free-elective", prerequisites: [] },
 ];
 
 // Category display names
@@ -263,6 +300,7 @@ const CATEGORY_NAMES = {
     "science": "Science Foundation",
     "common-core": "Common Core",
     "language": "Language",
+    "ai-literacy": "AI Literacy",
     "second-major": "2nd Major / Minor",
     "free-elective": "Free Elective"
 };
@@ -772,6 +810,45 @@ const PROGRAM_PRESETS = {
             { code: "SDST4606", name: "Risk Management and Basel Accords", credits: 6, category: "second-major", prerequisites: ["SDST3609"] },
             { code: "SDST4607", name: "Credit Risk Analysis", credits: 6, category: "second-major", prerequisites: ["SDST3600"] },
             { code: "SDST4608", name: "Market Risk Analysis", credits: 6, category: "second-major", prerequisites: ["SDST3600"] },
+        ]
+    },
+
+    "eee-minor": {
+        name: "Electrical & Electronic Engineering",
+        type: "minor",
+        credits: 48,
+        overlapNote: "Not applicable to BEng(CE), BEng(EE), BEng(ElecE). Requires HKDSE Math L3+ and Physics L3+. ENGG1310 cannot double-count with another programme.",
+        courses: [
+            // Core (12 cr)
+            { code: "ENGG1310", name: "Electricity and Electronics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC2346", name: "Electric Circuit Theory", credits: 6, category: "second-major", prerequisites: ["ENGG1310"] },
+            // Disciplinary Electives (36 cr from the following)
+            { code: "ELEC2147", name: "Electrical Energy Technology", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC2243", name: "Introduction to Electricity and Magnetism", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC2245", name: "Control Systems I", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC2347", name: "Fundamentals of Optics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC2441", name: "Computer Organization and Microprocessors", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC2543", name: "Object-Oriented Programming and Data Structures", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC2544", name: "Introduction to Electronic Commerce and Financial Technology", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC3142", name: "Electrical Energy Conversion", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC3143", name: "Power Electronics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC3241", name: "Signals and Linear Systems", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC3243", name: "Fundamentals of Next-Generation Communications", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC3244", name: "Digital Signal Processing", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC3248", name: "Engineering Electromagnetism and Antenna Design", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC3249", name: "Pattern Recognition and Machine Intelligence", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC3342", name: "Digital System Design", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC3347", name: "Electronic Materials and Quantum Physics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC3349", name: "Optical Devices", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC3350", name: "Electronic Circuits and Devices I", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC3351", name: "Electronic Circuits and Devices II", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC3441", name: "Computer Architecture", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC3443", name: "Computer Networks", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC3543", name: "Advanced Systems Programming", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC3544", name: "Introduction to Data Analytics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC3641", name: "Human Computer Interaction", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC4343", name: "Design of Digital Integrated Circuits", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "ELEC4344", name: "Advanced Electronic Circuits", credits: 6, category: "second-major", prerequisites: [] },
         ]
     },
 };
