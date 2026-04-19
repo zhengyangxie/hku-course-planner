@@ -24,6 +24,7 @@ let sortKey = "code";
 let searchQuery = "";
 
 const CREDIT_CAP = 288;
+const SEMESTER_CAP = 36;  // max credits per semester (HKU BSc)
 const MATH_MAJOR_CREDITS = 96;
 const LANG_CREDITS = 18;
 const AILT_CREDITS = 6;
@@ -485,7 +486,7 @@ function renderSemester(semId) {
 
     creditsSpan.textContent = totalCredits;
     const creditsDiv = container.closest(".semester").querySelector(".semester-credits");
-    creditsDiv.classList.toggle("overload", totalCredits > 30);
+    creditsDiv.classList.toggle("overload", totalCredits > SEMESTER_CAP);
 }
 
 function renderAllSemesters() {
@@ -773,7 +774,7 @@ function checkWarnings() {
             const c = allCourses.find(x => x.code === code);
             if (c) semCredits += c.credits;
         }
-        if (semCredits > 30) warnings.push(`Semester ${semId}: ${semCredits} credits exceeds 30-credit cap`);
+        if (semCredits > SEMESTER_CAP) warnings.push(`Semester ${semId}: ${semCredits} credits exceeds ${SEMESTER_CAP}-credit cap`);
         for (const code of codes) {
             if (!checkPrereqMet(code, semId)) {
                 const course = allCourses.find(c => c.code === code);
