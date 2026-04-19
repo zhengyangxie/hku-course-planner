@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HKU Course Planner</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=20260420">
     <link rel="preconnect" href="https://rsms.me/">
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 </head>
@@ -51,6 +51,14 @@
                         </div>
                     </div>
                 </div>
+                <label class="as-toggle" title="Advanced Standing: granted for prior university-level study. Reduces Common Core by 12 credits and Free Electives by 18 credits.">
+                    <input type="checkbox" id="advanced-standing-toggle">
+                    <span class="as-toggle-slider" aria-hidden="true"></span>
+                    <span class="as-toggle-label">
+                        <strong>Advanced Standing</strong>
+                        <small>−12 Common Core, −18 Free Elective</small>
+                    </span>
+                </label>
                 <div id="overlap-note" class="overlap-note" style="display:none;"></div>
             </div>
         </section>
@@ -327,7 +335,7 @@
         </div>
     </div>
 
-    <script src="courses.js"></script>
-    <script src="app.js"></script>
+    <script src="courses.js?v=20260420"></script>
+    <script src="app.js?v=20260420"></script>
 </body>
 </html>

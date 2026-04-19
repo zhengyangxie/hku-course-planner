@@ -11,6 +11,7 @@ let activePrograms = [];
 let presetCourses = [];
 let draggedCourse = null;
 let draggedProgram = null;
+let advancedStanding = false;  // AS: reduces free-elec by 18 and CC by 12 (total 30 credits off)
 
 // Multi-facet filter state
 let activeFilters = {
@@ -23,11 +24,17 @@ let sortKey = "code";
 let searchQuery = "";
 
 const CREDIT_CAP = 288;
-const MIN_CREDITS = 240;
 const MATH_MAJOR_CREDITS = 96;
-const CC_CREDITS = 36;
 const LANG_CREDITS = 18;
 const AILT_CREDITS = 6;
+
+// Advanced Standing reductions
+const AS_FREE_ELEC_REDUCTION = 18;
+const AS_CC_REDUCTION = 12;
+
+// Derived credit targets (functions so they respect advanced standing)
+function getMinCredits() { return advancedStanding ? 240 - AS_FREE_ELEC_REDUCTION - AS_CC_REDUCTION : 240; }
+function getCcCredits()  { return advancedStanding ? 36 - AS_CC_REDUCTION : 36; }
 
 // ==================== Init ====================
 document.addEventListener("DOMContentLoaded", () => {
@@ -38,6 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
     renderDeptChips();
     renderCoursePool();
     renderAllSemesters();
+    // Sync AS toggle with saved state
+    document.getElementById("advanced-standing-toggle").checked = advancedStanding;
     updateDashboard();
     setupEventListeners();
     maybeShowWelcome();
@@ -611,6 +620,8 @@ function setupEventListeners() {
             customCourses = [];
             activePrograms = [];
             presetCourses = [];
+            advancedStanding = false;
+            document.getElementById("advanced-standing-toggle").checked = false;
             renderProgramPool();
             renderMyDegree();
             renderDeptChips();
@@ -665,6 +676,15 @@ function setupEventListeners() {
     document.getElementById("welcome-dismiss").addEventListener("click", () => {
         document.getElementById("welcome-banner").style.display = "none";
         localStorage.setItem("hku-welcome-dismissed", "1");
+    });
+
+    // Advanced Standing toggle
+    document.getElementById("advanced-standing-toggle").addEventListener("change", (e) => {
+        advancedStanding = e.target.checked;
+        updateDashboard();
+        checkWarnings();
+        saveToStorage();
+        showToast(advancedStanding ? "Advanced Standing enabled (−30 credits)" : "Advanced Standing disabled");
     });
 
     // Mobile FAB
@@ -806,16 +826,25 @@ function updateDashboard() {
     document.getElementById("lang-credits").textContent = lang;
     document.getElementById("ailt-credits").textContent = ailt;
 
-    document.getElementById("total-credits-bar").style.width = Math.min(100, (total / MIN_CREDITS) * 100) + "%";
+    const minC = getMinCredits();
+    const ccTarget = getCcCredits();
+
+    document.getElementById("total-credits-bar").style.width = Math.min(100, (total / minC) * 100) + "%";
     document.getElementById("major-credits-bar").style.width = Math.min(100, (major / MATH_MAJOR_CREDITS) * 100) + "%";
-    document.getElementById("cc-credits-bar").style.width = Math.min(100, (cc / CC_CREDITS) * 100) + "%";
+    document.getElementById("cc-credits-bar").style.width = Math.min(100, (cc / ccTarget) * 100) + "%";
     document.getElementById("lang-credits-bar").style.width = Math.min(100, (lang / LANG_CREDITS) * 100) + "%";
     document.getElementById("ailt-credits-bar").style.width = Math.min(100, (ailt / AILT_CREDITS) * 100) + "%";
 
-    setCardStatus("card-total", total, MIN_CREDITS);
+    // Update denom text for total + cc to reflect advanced standing
+    const totalDenom = document.querySelector("#card-total .denom");
+    if (totalDenom) totalDenom.textContent = `/ ${minC} min${advancedStanding ? " (AS)" : ""}`;
+    const ccDenom = document.querySelector("#card-cc .denom");
+    if (ccDenom) ccDenom.textContent = `/ ${ccTarget}${advancedStanding ? " (AS)" : ""}`;
+
+    setCardStatus("card-total", total, minC);
     if (total > CREDIT_CAP) document.getElementById("card-total").classList.add("overload");
     setCardStatus("card-major", major, MATH_MAJOR_CREDITS);
-    setCardStatus("card-cc", cc, CC_CREDITS);
+    setCardStatus("card-cc", cc, ccTarget);
     setCardStatus("card-lang", lang, LANG_CREDITS);
     setCardStatus("card-ailt", ailt, AILT_CREDITS);
 
@@ -875,10 +904,15 @@ function checkGraduation() {
         const c = allCourses.find(x => x.code === code);
         if (c) totalCredits += c.credits;
     }
-    buildSection("Overall", [
-        { label: `Minimum credits: ${totalCredits} / ${MIN_CREDITS}`, ok: totalCredits >= MIN_CREDITS },
+    const minC = getMinCredits();
+    const overallChecks = [
+        { label: `Minimum credits: ${totalCredits} / ${minC}${advancedStanding ? " (Advanced Standing)" : ""}`, ok: totalCredits >= minC },
         { label: `Credit cap: ${totalCredits} / ${CREDIT_CAP}`, ok: totalCredits <= CREDIT_CAP },
-    ]);
+    ];
+    if (advancedStanding) {
+        overallChecks.push({ label: `Advanced Standing applied: −${AS_FREE_ELEC_REDUCTION} free elective, −${AS_CC_REDUCTION} Common Core`, ok: true });
+    }
+    buildSection("Overall", overallChecks);
 
     // --- Math Major ---
     const mathCore = ["MATH1013", "MATH2012", "MATH2101", "MATH2102", "MATH2211", "MATH2241"];
@@ -917,8 +951,9 @@ function checkGraduation() {
         if (c.category === "ai-literacy") ailtCredits += c.credits;
     }
 
+    const ccTargetG = getCcCredits();
     buildSection("University Requirements", [
-        { label: `Common Core: ${ccCredits} / ${CC_CREDITS} credits`, ok: ccCredits >= CC_CREDITS },
+        { label: `Common Core: ${ccCredits} / ${ccTargetG} credits${advancedStanding ? " (AS reduced)" : ""}`, ok: ccCredits >= ccTargetG },
         { label: `Language: ${langCredits} / ${LANG_CREDITS} credits`, ok: langCredits >= LANG_CREDITS },
         { label: `AI Literacy: ${ailtCredits} / ${AILT_CREDITS} credits`, ok: ailtCredits >= AILT_CREDITS },
     ]);
@@ -1017,6 +1052,7 @@ function saveToStorage() {
     localStorage.setItem("hku-custom", JSON.stringify(customCourses));
     localStorage.setItem("hku-active-programs", JSON.stringify(activePrograms));
     localStorage.setItem("hku-preset-courses", JSON.stringify(presetCourses));
+    localStorage.setItem("hku-advanced-standing", advancedStanding ? "1" : "0");
 }
 
 function loadFromStorage() {
@@ -1037,6 +1073,7 @@ function loadFromStorage() {
         }
         const pc = localStorage.getItem("hku-preset-courses");
         if (pc) presetCourses = JSON.parse(pc);
+        advancedStanding = localStorage.getItem("hku-advanced-standing") === "1";
     } catch (e) { /* ignore */ }
 }
 
@@ -1052,6 +1089,9 @@ function exportPlan() {
         text += `Programs: Mathematics (Major) + ${labels.join(" + ")}\n`;
     } else {
         text += "Program: Mathematics (Major)\n";
+    }
+    if (advancedStanding) {
+        text += `Advanced Standing: Yes (−${AS_CC_REDUCTION} CC, −${AS_FREE_ELEC_REDUCTION} Free Elective, min ${getMinCredits()} cr)\n`;
     }
     text += "\n";
 
@@ -1095,6 +1135,10 @@ function loadPlanFromFile() {
                 if (data.activePrograms !== undefined) activePrograms = data.activePrograms;
                 else if (data.activeProgram !== undefined) activePrograms = data.activeProgram ? [data.activeProgram] : [];
                 if (data.presetCourses) presetCourses = data.presetCourses;
+                if (data.advancedStanding !== undefined) {
+                    advancedStanding = !!data.advancedStanding;
+                    document.getElementById("advanced-standing-toggle").checked = advancedStanding;
+                }
                 rebuildPresetCourses();
                 renderProgramPool(); renderMyDegree();
                 renderDeptChips();
