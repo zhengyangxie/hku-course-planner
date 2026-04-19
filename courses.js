@@ -305,6 +305,92 @@ const CATEGORY_NAMES = {
     "free-elective": "Free Elective"
 };
 
+// Semester availability: 1 = Sem 1 only, 2 = Sem 2 only, 3 = both semesters, 0 = full year / TBD
+const COURSE_SEMESTERS = {
+    // Science Foundation
+    "SCNC1111": 1, "SCNC1112": 2,
+    // MATH (per 2024-25 Advice on Course Selection, HKU Math Dept)
+    // Intro / Core
+    "MATH1013": 3, "MATH2012": 3, "MATH2014": 3,
+    "MATH2101": 3, "MATH2102": 2, "MATH2211": 3, "MATH2241": 3,
+    "MATH2301": 0,
+    // Advanced — Algebra / Number Theory
+    "MATH3301": 1, "MATH3303": 2, "MATH3304": 2, "MATH4302": 2,
+    // Advanced — Analysis
+    "MATH3401": 1, "MATH3403": 2, "MATH3405": 2, "MATH3406": 1, "MATH3407": 2, "MATH3408": 1,
+    "MATH4402": 2, "MATH4404": 1, "MATH4406": 1, "MATH4511": 2,
+    // Advanced — Topology / Geometry / Discrete
+    "MATH3501": 1, "MATH3502": 2, "MATH3504": 2, "MATH3541": 1, "MATH3600": 1,
+    // Advanced — Computational / Numerical
+    "MATH3601": 2, "MATH4501": 0, "MATH4602": 2,
+    // Advanced — Probability / Statistics
+    "MATH3603": 2,
+    // Advanced — Optimization / OR / Finance
+    "MATH3900": 1, "MATH3901": 2, "MATH3904": 1, "MATH3905": 1, "MATH3906": 2,
+    "MATH3911": 2, "MATH3943": 1,
+    // Seminar / Capstone / Project
+    "MATH3002": 2, "MATH3999": 3, "MATH4902": 0, "MATH4907": 0,
+    "MATH4910": 2, "MATH4911": 0, "MATH4966": 3, "MATH4999": 0,
+    // Language
+    "CAES1000": 1, "CAES1001": 0, "CAES9000": 2,
+    "CHIN9001": 3, "CHIN9002": 3, "CHIN9003": 3,
+    "AILT1001": 1, "AILT1002": 2,
+    // CS
+    "COMP1117": 3, "COMP2113": 3, "COMP2118": 0, "COMP2119": 3,
+    "COMP2120": 2, "COMP2121": 3, "COMP2501": 3,
+    "COMP3230": 1, "COMP3234": 3, "COMP3251": 2, "COMP3252": 2,
+    "COMP3258": 2, "COMP3259": 2, "COMP3270": 3, "COMP3271": 1,
+    "COMP3278": 3, "COMP3297": 3, "COMP3311": 0, "COMP3314": 3,
+    "COMP3316": 1, "COMP3317": 2, "COMP3320": 0, "COMP3322": 3,
+    "COMP3323": 2, "COMP3329": 2, "COMP3330": 1, "COMP3340": 2,
+    "COMP3351": 0, "COMP3352": 0, "COMP3353": 1, "COMP3354": 1,
+    "COMP3355": 1, "COMP3356": 1, "COMP3357": 1, "COMP3358": 2,
+    "COMP3360": 2, "COMP3361": 2, "COMP3362": 0, "COMP3364": 0,
+    "COMP3365": 2, "COMP3366": 1, "COMP3405": 0, "COMP3407": 0,
+    "COMP3412": 0, "COMP3414": 0, "COMP3516": 2,
+    "COMP4510": 0, "COMP4511": 0, "COMP4512": 0, "COMP4801": 0,
+    "COMP3160": 0,
+    // Physics
+    "PHYS1150": 3, "PHYS1250": 3, "PHYS2055": 2, "PHYS2150": 1,
+    "PHYS2155": 2, "PHYS2160": 0, "PHYS2250": 3, "PHYS2255": 2,
+    "PHYS2261": 1, "PHYS2265": 3, "PHYS3150": 1, "PHYS3151": 0,
+    "PHYS3350": 2, "PHYS3351": 1, "PHYS3450": 2, "PHYS3550": 1,
+    "PHYS3650": 1, "PHYS3653": 2, "PHYS3660": 1, "PHYS3750": 1,
+    "PHYS3760": 2, "PHYS3850": 2, "PHYS3851": 2,
+    "PHYS4150": 1, "PHYS4151": 0, "PHYS4351": 2, "PHYS4450": 1,
+    "PHYS4550": 0, "PHYS4551": 1, "PHYS4650": 0, "PHYS4652": 2,
+    "PHYS4653": 1, "PHYS4654": 1, "PHYS4655": 0, "PHYS4656": 2,
+    "PHYS4850": 1, "PHYS4966": 0, "PHYS4999": 0,
+    "PHYS7350": 0, "PHYS7351": 1, "PHYS7450": 2, "PHYS7550": 2, "PHYS7750": 0,
+    // SDST (Statistics / Data Science)
+    "SDST1018": 2, "SDST1600": 3, "SDST2601": 3, "SDST2602": 3, "SDST2604": 1,
+    "SDST3010": 2, "SDST3021": 1, "SDST3600": 3, "SDST3602": 1, "SDST3603": 1,
+    "SDST3604": 0, "SDST3606": 1, "SDST3607": 0, "SDST3608": 0,
+    "SDST3609": 1, "SDST3610": 2, "SDST3612": 3, "SDST3613": 1,
+    "SDST3615": 2, "SDST3617": 2, "SDST3618": 2, "SDST3620": 1,
+    "SDST3621": 2, "SDST3622": 2, "SDST3655": 2, "SDST3799": 3,
+    "SDST3910": 1, "SDST3911": 2, "SDST4011": 1, "SDST4023": 0,
+    "SDST4601": 1, "SDST4602": 2, "SDST4603": 1, "SDST4606": 0,
+    "SDST4607": 2, "SDST4608": 2, "SDST4609": 2, "SDST4610": 1,
+    "SDST4611": 0, "SDST4612": 0, "SDST4613": 0, "SDST4614": 0,
+    "SDST4710": 3, "SDST4766": 3, "SDST4799": 0, "SDST7609": 1, "SDST7610": 2,
+    // Economics
+    "ECON1210": 3, "ECON1220": 3, "ECON1280": 3, "ECON2210": 3, "ECON2220": 3,
+    "ECON2252": 1, "ECON2280": 3, "ECON3284": 2, "ECON4200": 0,
+    "ECON4211": 1, "ECON4221": 1,
+    // Finance / Accounting
+    "ACCT1101": 3, "ACCT3114": 2, "FINA1310": 3, "FINA2320": 3,
+    "FINA2322": 3, "FINA2330": 3, "FINA2331": 0, "FINA2342": 3, "FINA2350": 2,
+    // EEE
+    "ENGG1310": 3, "ELEC2147": 2, "ELEC2243": 1, "ELEC2245": 1,
+    "ELEC2346": 1, "ELEC2347": 1, "ELEC2441": 1, "ELEC2543": 2,
+    "ELEC2544": 2, "ELEC3142": 2, "ELEC3143": 1, "ELEC3241": 2,
+    "ELEC3243": 1, "ELEC3244": 2, "ELEC3248": 2, "ELEC3249": 2,
+    "ELEC3342": 1, "ELEC3347": 1, "ELEC3349": 1, "ELEC3350": 2,
+    "ELEC3351": 2, "ELEC3441": 2, "ELEC3443": 3, "ELEC3543": 1,
+    "ELEC3544": 2, "ELEC3641": 2, "ELEC4343": 1, "ELEC4344": 2,
+};
+
 // ==================== Second Major / Minor Presets ====================
 const PROGRAM_PRESETS = {
 
