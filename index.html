@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HKU Course Planner</title>
-    <link rel="stylesheet" href="styles.css?v=20260422b">
+    <link rel="stylesheet" href="styles.css?v=20260422c">
     <link rel="preconnect" href="https://rsms.me/">
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 </head>
@@ -122,6 +122,13 @@
                 <div class="course-pool-header">
                     <h2>Course Pool</h2>
                     <span class="count-badge" id="course-count">0</span>
+                    <button class="pool-reset-btn" id="pool-reset-btn" title="Reset filters + column width">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true">
+                            <path d="M3 12a9 9 0 1 0 3-6.7"/>
+                            <path d="M3 4v5h5"/>
+                        </svg>
+                        Reset
+                    </button>
                 </div>
 
                 <div class="search-wrapper">
@@ -163,6 +170,11 @@
                 <div id="course-list" class="course-list"></div>
                 <button id="add-custom-btn" class="btn-add-custom">+ Add Custom Course</button>
             </aside>
+
+            <!-- Draggable splitter between pool and planner -->
+            <div class="pool-splitter" id="pool-splitter" role="separator" aria-label="Drag to resize course pool" aria-orientation="vertical" tabindex="0" title="Drag to resize · Double-click to reset">
+                <span class="pool-splitter-handle" aria-hidden="true"></span>
+            </div>
 
             <!-- Planner Grid -->
             <section class="planner-grid">
@@ -335,7 +347,7 @@
         </div>
     </div>
 
-    <script src="courses.js?v=20260422b"></script>
-    <script src="app.js?v=20260422b"></script>
+    <script src="courses.js?v=20260422c"></script>
+    <script src="app.js?v=20260422c"></script>
 </body>
 </html>

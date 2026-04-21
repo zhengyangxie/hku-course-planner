@@ -552,9 +552,83 @@ header .subtitle {
 /* ============ Main Layout ============ */
 .main-container {
     display: grid;
-    grid-template-columns: 520px 1fr;
-    gap: var(--s-5);
+    grid-template-columns: 520px 8px 1fr;
+    gap: var(--s-4);
     align-items: flex-start;
+}
+
+/* Draggable splitter between pool and planner */
+.pool-splitter {
+    position: sticky;
+    top: 64px;
+    height: calc(100vh - 100px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: col-resize;
+    user-select: none;
+    border-radius: var(--r-full);
+    transition: background var(--t-fast);
+}
+
+.pool-splitter:hover,
+.pool-splitter.dragging,
+.pool-splitter:focus-visible {
+    background: var(--accent-100);
+    outline: none;
+}
+
+.pool-splitter-handle {
+    width: 4px;
+    height: 48px;
+    border-radius: var(--r-full);
+    background: var(--gray-300);
+    transition: background var(--t-fast), height var(--t-fast);
+}
+
+.pool-splitter:hover .pool-splitter-handle,
+.pool-splitter.dragging .pool-splitter-handle,
+.pool-splitter:focus-visible .pool-splitter-handle {
+    background: var(--accent-600);
+    height: 64px;
+}
+
+body.splitter-dragging {
+    cursor: col-resize !important;
+    user-select: none !important;
+}
+
+body.splitter-dragging * {
+    cursor: col-resize !important;
+    user-select: none !important;
+}
+
+/* Reset button in course pool header */
+.pool-reset-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-1);
+    padding: 2px var(--s-2);
+    background: transparent;
+    color: var(--gray-500);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--r-full);
+    font-size: 0.7rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    margin-left: var(--s-2);
+    transition: all var(--t-fast);
+}
+
+.pool-reset-btn:hover {
+    background: var(--gray-100);
+    color: var(--gray-800);
+    border-color: var(--gray-300);
+}
+
+.pool-reset-btn svg {
+    flex-shrink: 0;
 }
 
 /* ============ Course Pool ============ */
@@ -1178,44 +1252,104 @@ header .subtitle {
 }
 
 .grad-section {
-    margin-top: var(--s-4);
-    padding-top: var(--s-4);
-    border-top: 1px solid var(--gray-200);
+    margin-top: var(--s-2);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--r-md);
+    background: white;
+    overflow: hidden;
 }
 
-.grad-section:first-of-type {
-    margin-top: 0;
-    padding-top: 0;
-    border-top: none;
+.grad-section:first-of-type { margin-top: 0; }
+
+.grad-section-summary {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    padding: var(--s-3) var(--s-4);
+    cursor: pointer;
+    list-style: none;
+    transition: background var(--t-fast);
+    user-select: none;
 }
 
-.grad-section h4 {
-    font-size: var(--text-xs);
+.grad-section-summary::-webkit-details-marker { display: none; }
+
+.grad-section-summary:hover {
+    background: var(--gray-50);
+}
+
+.grad-section-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: var(--r-full);
+    font-size: 0.7rem;
     font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+}
+
+.grad-section-chip.ok {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.grad-section-chip.no {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+.grad-section-title {
+    flex: 1;
+    font-weight: 600;
+    color: var(--gray-900);
+    font-size: var(--text-sm);
+    letter-spacing: -0.005em;
+}
+
+.grad-section-count {
+    font-size: 0.7rem;
+    font-weight: 600;
     color: var(--gray-500);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: var(--s-3);
+    font-variant-numeric: tabular-nums;
+}
+
+.grad-section-chevron {
+    color: var(--gray-400);
+    transition: transform var(--t-fast);
+}
+
+.grad-section[open] .grad-section-chevron {
+    transform: rotate(180deg);
+}
+
+.grad-section[open] .grad-section-summary {
+    border-bottom: 1px solid var(--gray-200);
 }
 
 .grad-checks {
     display: flex;
     flex-direction: column;
-    gap: var(--s-2);
+    gap: var(--s-1);
+    padding: var(--s-3) var(--s-4);
+    background: var(--gray-50);
 }
 
 .grad-check {
     display: flex;
     align-items: center;
-    gap: var(--s-3);
-    padding: var(--s-2) var(--s-3);
-    background: var(--gray-50);
-    border-radius: var(--r-md);
+    gap: var(--s-2);
+    padding: var(--s-1) var(--s-2);
+    background: transparent;
+    border-radius: var(--r-sm);
     font-size: var(--text-xs);
 }
 
-.grad-check.ok { background: var(--success-bg); }
-.grad-check.no { background: var(--danger-bg); }
+.grad-check.ok { background: transparent; }
+.grad-check.no { background: transparent; }
+.grad-check.no .grad-check-label { color: var(--danger); font-weight: 600; }
 
 .grad-check .grad-check-icon {
     width: 18px; height: 18px;
@@ -1237,8 +1371,8 @@ header .subtitle {
     font-weight: 500;
 }
 
-.grad-check.ok .grad-check-label { color: #065F46; }
-.grad-check.no .grad-check-label { color: #991B1B; }
+.grad-check.ok .grad-check-label { color: var(--gray-600); }
+.grad-check.no .grad-check-label { color: #991B1B; font-weight: 600; }
 
 /* Radar chart in graduation result */
 .grad-radar-wrap {
@@ -1681,7 +1815,7 @@ header .subtitle {
 
 /* ============ Responsive ============ */
 @media (max-width: 1200px) {
-    .main-container { grid-template-columns: 340px 1fr; }
+    .main-container { grid-template-columns: 340px 8px 1fr; }
     .course-list { grid-template-columns: 1fr; }
 }
 
@@ -1694,6 +1828,7 @@ header .subtitle {
     .page { padding: var(--s-4); }
     .program-section { grid-template-columns: 1fr; }
     .main-container { grid-template-columns: 1fr; }
+    .pool-splitter { display: none; }
     .course-pool {
         position: static;
         max-height: none;

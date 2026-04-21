@@ -695,6 +695,123 @@ function setupEventListeners() {
     document.getElementById("course-pool-close").addEventListener("click", () => {
         document.getElementById("course-pool").classList.remove("mobile-open");
     });
+
+    // Draggable splitter between course pool and planner
+    setupPoolSplitter();
+
+    // Reset filters + column width button
+    document.getElementById("pool-reset-btn").addEventListener("click", () => {
+        // Clear filters + search
+        activeFilters.depts.clear();
+        activeFilters.levels.clear();
+        activeFilters.sems.clear();
+        activeFilters.notPlaced = false;
+        searchQuery = "";
+        document.getElementById("search-input").value = "";
+        document.getElementById("sort-select").value = "code";
+        sortKey = "code";
+        renderDeptChips();
+        updateFilterChipStates();
+        renderCoursePool();
+        // Reset column width to default
+        resetPoolWidth();
+        showToast("Filters and layout reset");
+    });
+}
+
+// ==================== Pool splitter (column resize) ====================
+const POOL_WIDTH_KEY = "hku-pool-width";
+const POOL_WIDTH_DEFAULT = 520;
+const POOL_WIDTH_MIN = 280;
+const POOL_WIDTH_MAX = 900;
+
+function applyPoolWidth(px) {
+    const main = document.querySelector(".main-container");
+    if (!main) return;
+    // Skip if responsive breakpoint has collapsed to 1-column
+    if (window.innerWidth <= 900) return;
+    const w = Math.max(POOL_WIDTH_MIN, Math.min(POOL_WIDTH_MAX, px));
+    main.style.gridTemplateColumns = `${w}px 8px 1fr`;
+}
+
+function resetPoolWidth() {
+    const main = document.querySelector(".main-container");
+    if (!main) return;
+    main.style.removeProperty("grid-template-columns");
+    try { localStorage.removeItem(POOL_WIDTH_KEY); } catch (e) {}
+}
+
+function setupPoolSplitter() {
+    const splitter = document.getElementById("pool-splitter");
+    if (!splitter) return;
+
+    // Restore persisted width
+    try {
+        const saved = parseInt(localStorage.getItem(POOL_WIDTH_KEY) || "", 10);
+        if (Number.isFinite(saved)) applyPoolWidth(saved);
+    } catch (e) {}
+
+    let startX = 0;
+    let startWidth = 0;
+    let dragging = false;
+
+    const onMouseMove = (e) => {
+        if (!dragging) return;
+        const dx = e.clientX - startX;
+        const newW = startWidth + dx;
+        applyPoolWidth(newW);
+    };
+    const onMouseUp = () => {
+        if (!dragging) return;
+        dragging = false;
+        splitter.classList.remove("dragging");
+        document.body.classList.remove("splitter-dragging");
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+        // Save final width
+        const pool = document.getElementById("course-pool");
+        if (pool) {
+            try { localStorage.setItem(POOL_WIDTH_KEY, String(Math.round(pool.getBoundingClientRect().width))); } catch (e) {}
+        }
+    };
+
+    splitter.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        const pool = document.getElementById("course-pool");
+        if (!pool) return;
+        dragging = true;
+        startX = e.clientX;
+        startWidth = pool.getBoundingClientRect().width;
+        splitter.classList.add("dragging");
+        document.body.classList.add("splitter-dragging");
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+    });
+
+    splitter.addEventListener("dblclick", () => {
+        resetPoolWidth();
+        showToast("Column width reset");
+    });
+
+    // Keyboard accessibility: arrow keys adjust width
+    splitter.addEventListener("keydown", (e) => {
+        const pool = document.getElementById("course-pool");
+        if (!pool) return;
+        const current = pool.getBoundingClientRect().width;
+        const step = e.shiftKey ? 40 : 10;
+        if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            applyPoolWidth(current - step);
+            try { localStorage.setItem(POOL_WIDTH_KEY, String(Math.round(current - step))); } catch (e) {}
+        } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            applyPoolWidth(current + step);
+            try { localStorage.setItem(POOL_WIDTH_KEY, String(Math.round(current + step))); } catch (e) {}
+        } else if (e.key === "Home") {
+            e.preventDefault();
+            resetPoolWidth();
+        }
+    });
 }
 
 function showToast(msg) {
@@ -1126,19 +1243,35 @@ function checkGraduation() {
                </div>
            </div>`;
 
-    const sectionsHtml = sections.map(sec => `
-        <div class="grad-section">
-            <h4>${escapeHtml(sec.title)}</h4>
-            <div class="grad-checks">
-                ${sec.checks.map(c => `
-                    <div class="grad-check ${c.ok ? 'ok' : 'no'}">
-                        <span class="grad-check-icon">${c.ok ? '✓' : '✗'}</span>
-                        <span class="grad-check-label">${escapeHtml(c.label)}</span>
-                    </div>
-                `).join("")}
-            </div>
-        </div>
-    `).join("");
+    const sectionsHtml = sections.map(sec => {
+        const passCount = sec.checks.filter(c => c.ok).length;
+        const total = sec.checks.length;
+        const allOk = passCount === total;
+        const hasFail = passCount < total;
+        // Auto-expand failing sections, collapse passing ones
+        return `
+            <details class="grad-section" ${hasFail ? 'open' : ''}>
+                <summary class="grad-section-summary">
+                    <span class="grad-section-chip ${allOk ? 'ok' : 'no'}">
+                        ${allOk ? '✓' : `${total - passCount}`}
+                    </span>
+                    <span class="grad-section-title">${escapeHtml(sec.title)}</span>
+                    <span class="grad-section-count">${passCount}/${total}</span>
+                    <svg class="grad-section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true">
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                </summary>
+                <div class="grad-checks">
+                    ${sec.checks.map(c => `
+                        <div class="grad-check ${c.ok ? 'ok' : 'no'}">
+                            <span class="grad-check-icon">${c.ok ? '✓' : '✗'}</span>
+                            <span class="grad-check-label">${escapeHtml(c.label)}</span>
+                        </div>
+                    `).join("")}
+                </div>
+            </details>
+        `;
+    }).join("");
 
     // Build radar axes — credit distribution across all requirement dimensions
     const radarAxes = [
