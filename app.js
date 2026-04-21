@@ -887,6 +887,113 @@ function updateDashboard() {
 }
 
 // ==================== Graduation Check ====================
+// ==================== Radar Chart ====================
+function renderRadarChart(axes) {
+    if (axes.length < 3) {
+        // Need at least 3 axes for a meaningful radar
+        return `<div class="grad-radar-empty">Add at least 3 requirement categories to see the radar chart.</div>`;
+    }
+
+    const size = 320;
+    const cx = size / 2, cy = size / 2;
+    const maxR = 110; // inner radius for 100% ring; label space outside
+
+    // Compute axis angles (start at top, go clockwise)
+    const n = axes.length;
+    const angles = axes.map((_, i) => -Math.PI / 2 + (i * 2 * Math.PI) / n);
+
+    const polar = (r, angle) => ({
+        x: cx + r * Math.cos(angle),
+        y: cy + r * Math.sin(angle),
+    });
+
+    // Build guide rings (25/50/75/100%)
+    const rings = [0.25, 0.5, 0.75, 1].map(frac => {
+        const pts = angles.map(a => {
+            const p = polar(maxR * frac, a);
+            return `${p.x.toFixed(1)},${p.y.toFixed(1)}`;
+        }).join(" ");
+        return `<polygon points="${pts}" class="radar-ring"${frac === 1 ? ' data-outer="1"' : ''}/>`;
+    }).join("");
+
+    // Radial lines (spokes)
+    const spokes = angles.map(a => {
+        const p = polar(maxR, a);
+        return `<line x1="${cx}" y1="${cy}" x2="${p.x.toFixed(1)}" y2="${p.y.toFixed(1)}" class="radar-spoke"/>`;
+    }).join("");
+
+    // Data polygon
+    const dataPts = axes.map((ax, i) => {
+        const ratio = ax.target > 0 ? Math.min(1, ax.earned / ax.target) : 0;
+        const p = polar(maxR * ratio, angles[i]);
+        return `${p.x.toFixed(1)},${p.y.toFixed(1)}`;
+    }).join(" ");
+
+    // Vertex dots + percentage labels
+    const vertices = axes.map((ax, i) => {
+        const ratio = ax.target > 0 ? Math.min(1, ax.earned / ax.target) : 0;
+        const rawRatio = ax.target > 0 ? ax.earned / ax.target : 0;
+        const p = polar(maxR * ratio, angles[i]);
+        const overloaded = rawRatio > 1;
+        return `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4" fill="${ax.color}"${overloaded ? ' stroke="var(--warning)" stroke-width="2"' : ''}/>`;
+    }).join("");
+
+    // Axis labels (outside the outer ring)
+    const labels = axes.map((ax, i) => {
+        const a = angles[i];
+        const p = polar(maxR + 18, a);
+        const cos = Math.cos(a), sin = Math.sin(a);
+        // Position text with anchor based on angle
+        let anchor = "middle";
+        if (cos > 0.3) anchor = "start";
+        else if (cos < -0.3) anchor = "end";
+        // Baseline adjustment
+        let dy = 0;
+        if (sin > 0.3) dy = 10;
+        else if (sin < -0.3) dy = -2;
+        else dy = 4;
+        const ratio = ax.target > 0 ? (ax.earned / ax.target) * 100 : 0;
+        return `
+            <text x="${p.x.toFixed(1)}" y="${(p.y + dy).toFixed(1)}" text-anchor="${anchor}" class="radar-label">${escapeHtml(ax.label)}</text>
+            <text x="${p.x.toFixed(1)}" y="${(p.y + dy + 12).toFixed(1)}" text-anchor="${anchor}" class="radar-pct">${Math.round(ratio)}%</text>
+        `;
+    }).join("");
+
+    const svg = `
+        <svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" class="radar-svg" aria-label="Degree requirement radar chart">
+            <g class="radar-rings">${rings}</g>
+            <g class="radar-spokes">${spokes}</g>
+            <polygon points="${dataPts}" class="radar-data"/>
+            <g class="radar-vertices">${vertices}</g>
+            <g class="radar-labels">${labels}</g>
+        </svg>
+    `;
+
+    const legend = axes.map(ax => {
+        const rawRatio = ax.target > 0 ? ax.earned / ax.target : 0;
+        const overloaded = rawRatio > 1;
+        const complete = rawRatio >= 1;
+        return `
+            <div class="item${overloaded ? ' overloaded' : complete ? ' complete' : ''}">
+                <span class="dot" style="background:${ax.color}"></span>
+                <span class="lab">${escapeHtml(ax.label)}</span>
+                <span class="num">${ax.earned}<span class="sep">/</span>${ax.target}</span>
+            </div>
+        `;
+    }).join("");
+
+    return `
+        <div class="grad-radar-wrap">
+            <div class="grad-radar">${svg}</div>
+            <div class="grad-radar-legend">
+                <h4>Credit distribution</h4>
+                ${legend}
+                <p class="grad-radar-hint">Filled area = current progress. Solid outer ring = 100% target. Overloaded axes are capped but flagged in the legend.</p>
+            </div>
+        </div>
+    `;
+}
+
 function checkGraduation() {
     const allCourses = getAllCourses();
     const placed = getPlacedCodes();
@@ -897,6 +1004,16 @@ function checkGraduation() {
     function buildSection(title, checks) {
         sections.push({ title, checks });
         for (const c of checks) { totalChecks++; if (!c.ok) failCount++; }
+    }
+
+    // Aggregate credits by category (mirror updateDashboard logic)
+    let majorCredits = 0;
+    for (const code of placed) {
+        const c = allCourses.find(x => x.code === code);
+        if (!c) continue;
+        if (["math-core", "math-adv-core", "math-elec-a", "math-elec-b", "math-capstone", "science"].includes(c.category)) {
+            majorCredits += c.credits;
+        }
     }
 
     // --- Overall ---
@@ -1023,7 +1140,35 @@ function checkGraduation() {
         </div>
     `).join("");
 
-    div.innerHTML = banner + sectionsHtml;
+    // Build radar axes — credit distribution across all requirement dimensions
+    const radarAxes = [
+        { label: "Math Major",  earned: majorCredits, target: MATH_MAJOR_CREDITS, color: "var(--cat-math-core)" },
+        { label: "Common Core", earned: ccCredits,    target: ccTargetG,           color: "var(--cat-cc)" },
+        { label: "Language",    earned: langCredits,  target: LANG_CREDITS,        color: "var(--cat-language)" },
+        { label: "AI Literacy", earned: ailtCredits,  target: AILT_CREDITS,        color: "var(--cat-ailt)" },
+    ];
+    for (const key of activePrograms) {
+        const preset = PROGRAM_PRESETS[key];
+        if (!preset) continue;
+        const programCourseCodes = new Set(preset.courses.map(c => c.code));
+        let progCredits = 0;
+        for (const code of placed) {
+            if (programCourseCodes.has(code)) {
+                const c = allCourses.find(x => x.code === code);
+                if (c) progCredits += c.credits;
+            }
+        }
+        radarAxes.push({
+            label: preset.name,
+            earned: progCredits,
+            target: preset.credits,
+            color: "var(--cat-program)",
+        });
+    }
+
+    const radarHtml = renderRadarChart(radarAxes);
+
+    div.innerHTML = banner + radarHtml + sectionsHtml;
     div.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
