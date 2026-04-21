@@ -521,19 +521,13 @@ const PROGRAM_PRESETS = {
     "stat-major": {
         name: "Statistics",
         type: "double",
-        credits: 114,
-        overlapNote: "MATH1013 may overlap with Math major (max 24cr double-count). Cannot combine with Decision Analytics or Risk Management.",
+        credits: 78,
+        overlapNote: "2nd major in Statistics: 78 cr above the Math major. MATH2012/2014/2101/2211 already in Math major — not re-counted here. Cannot combine with Decision Analytics or Risk Management.",
         courses: [
-            // Introductory Core (30 cr)
-            { code: "COMP1117", name: "Computer Programming", credits: 6, category: "second-major", prerequisites: [] },
+            // Introductory Core (18 cr)
             { code: "SDST1600", name: "Statistics: Ideas and Concepts", credits: 6, category: "second-major", prerequisites: [] },
             { code: "SDST2601", name: "Probability and Statistics I", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
             { code: "SDST2602", name: "Probability and Statistics II", credits: 6, category: "second-major", prerequisites: ["SDST2601"] },
-            // Introductory Electives — List A or B (12 cr)
-            { code: "MATH2012", name: "Fundamental Concepts of Mathematics", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
-            { code: "MATH2014", name: "Multivariable Calculus and Linear Algebra", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
-            { code: "MATH2101", name: "Linear Algebra I", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
-            { code: "MATH2211", name: "Multivariable Calculus", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
             // Advanced Core (42 cr)
             { code: "SDST3600", name: "Linear Statistical Analysis", credits: 6, category: "second-major", prerequisites: ["SDST2601"] },
             { code: "SDST3602", name: "Statistical Inference", credits: 6, category: "second-major", prerequisites: ["SDST2601"] },
@@ -569,19 +563,13 @@ const PROGRAM_PRESETS = {
     "rm-major": {
         name: "Risk Management",
         type: "double",
-        credits: 120,
-        overlapNote: "MATH1013 overlaps with Math major. Cannot combine with Statistics or Decision Analytics major.",
+        credits: 84,
+        overlapNote: "2nd major in Risk Management: 84 cr above the Math major. MATH intro electives already in Math major. Cannot combine with Statistics or Decision Analytics major.",
         courses: [
-            // Introductory Core (30 cr)
-            { code: "COMP1117", name: "Computer Programming", credits: 6, category: "second-major", prerequisites: [] },
+            // Introductory Core (18 cr)
             { code: "SDST1600", name: "Statistics: Ideas and Concepts", credits: 6, category: "second-major", prerequisites: [] },
             { code: "SDST2601", name: "Probability and Statistics I", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
             { code: "SDST2602", name: "Probability and Statistics II", credits: 6, category: "second-major", prerequisites: ["SDST2601"] },
-            // Introductory Electives (12 cr)
-            { code: "MATH2012", name: "Fundamental Concepts of Mathematics", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
-            { code: "MATH2014", name: "Multivariable Calculus and Linear Algebra", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
-            { code: "MATH2101", name: "Linear Algebra I", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
-            { code: "MATH2211", name: "Multivariable Calculus", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
             // Advanced Core (48 cr)
             { code: "SDST3600", name: "Linear Statistical Analysis", credits: 6, category: "second-major", prerequisites: ["SDST2601"] },
             { code: "SDST3609", name: "The Statistics of Investment Risk", credits: 6, category: "second-major", prerequisites: ["SDST2601"] },
@@ -615,21 +603,15 @@ const PROGRAM_PRESETS = {
     "da-major": {
         name: "Decision Analytics",
         type: "double",
-        credits: 126,
-        overlapNote: "MATH1013 overlaps with Math major (max 24cr double-count). Cannot combine with Statistics or Risk Management.",
+        credits: 90,
+        overlapNote: "2nd major in Decision Analytics: 90 cr above the Math major. MATH intro electives already in Math major. Cannot combine with Statistics or Risk Management.",
         courses: [
-            // Introductory Core (42 cr)
+            // Introductory Core (30 cr)
             { code: "COMP1117", name: "Computer Programming", credits: 6, category: "second-major", prerequisites: [] },
             { code: "COMP2113", name: "Programming Technologies", credits: 6, category: "second-major", prerequisites: ["COMP1117"] },
             { code: "COMP2118", name: "Data Structures and Algorithms Essentials", credits: 6, category: "second-major", prerequisites: ["COMP1117"] },
-            { code: "SDST1600", name: "Statistics: Ideas and Concepts", credits: 6, category: "second-major", prerequisites: [] },
             { code: "SDST2601", name: "Probability and Statistics I", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
             { code: "SDST2602", name: "Probability and Statistics II", credits: 6, category: "second-major", prerequisites: ["SDST2601"] },
-            // Introductory Electives (12 cr)
-            { code: "MATH2012", name: "Fundamental Concepts of Mathematics", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
-            { code: "MATH2014", name: "Multivariable Calculus and Linear Algebra", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
-            { code: "MATH2101", name: "Linear Algebra I", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
-            { code: "MATH2211", name: "Multivariable Calculus", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
             // Advanced Core (36 cr)
             { code: "MATH3900", name: "Optimization for AI and Data Analytics", credits: 6, category: "second-major", prerequisites: [] },
             { code: "SDST3600", name: "Linear Statistical Analysis", credits: 6, category: "second-major", prerequisites: ["SDST2601"] },
