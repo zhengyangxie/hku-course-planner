@@ -521,10 +521,12 @@ const PROGRAM_PRESETS = {
     "stat-major": {
         name: "Statistics",
         type: "double",
-        credits: 78,
-        overlapNote: "2nd major in Statistics: 78 cr above the Math major. MATH2012/2014/2101/2211 already in Math major — not re-counted here. Cannot combine with Decision Analytics or Risk Management.",
+        credits: 96,
+        overlapNote: "Statistics 2nd Major (2025-26): 96 cr total. MATH1013 & MATH2014 overlap with Math major — no double counting. If MATH2014 already taken, replace with MATH2101 + MATH2211. Cannot combine with Decision Analytics, Risk Management, or Stat/RM Minor.",
         courses: [
-            // Introductory Core (18 cr)
+            // Introductory Core (30 cr)
+            { code: "MATH1013", name: "University Mathematics II", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "MATH2014", name: "Multivariable Calculus and Linear Algebra", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
             { code: "SDST1600", name: "Statistics: Ideas and Concepts", credits: 6, category: "second-major", prerequisites: [] },
             { code: "SDST2601", name: "Probability and Statistics I", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
             { code: "SDST2602", name: "Probability and Statistics II", credits: 6, category: "second-major", prerequisites: ["SDST2601"] },
@@ -563,14 +565,16 @@ const PROGRAM_PRESETS = {
     "rm-major": {
         name: "Risk Management",
         type: "double",
-        credits: 84,
-        overlapNote: "2nd major in Risk Management: 84 cr above the Math major. MATH intro electives already in Math major. Cannot combine with Statistics or Decision Analytics major.",
+        credits: 90,
+        overlapNote: "Risk Management 2nd Major (2025-26): 90 cr total. MATH1013 & MATH2014 overlap with Math major — no double counting; take replacement electives. If MATH2014 already taken, replace with MATH2101 + MATH2211. Cannot combine with Statistics or Decision Analytics major.",
         courses: [
-            // Introductory Core (18 cr)
+            // Introductory Core (30 cr)
+            { code: "MATH1013", name: "University Mathematics II", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "MATH2014", name: "Multivariable Calculus and Linear Algebra", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
             { code: "SDST1600", name: "Statistics: Ideas and Concepts", credits: 6, category: "second-major", prerequisites: [] },
             { code: "SDST2601", name: "Probability and Statistics I", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
             { code: "SDST2602", name: "Probability and Statistics II", credits: 6, category: "second-major", prerequisites: ["SDST2601"] },
-            // Advanced Core (48 cr)
+            // Advanced Core (42 cr)
             { code: "SDST3600", name: "Linear Statistical Analysis", credits: 6, category: "second-major", prerequisites: ["SDST2601"] },
             { code: "SDST3609", name: "The Statistics of Investment Risk", credits: 6, category: "second-major", prerequisites: ["SDST2601"] },
             { code: "SDST3615", name: "Practical Mathematics for Investment", credits: 6, category: "second-major", prerequisites: ["SDST2601"] },
@@ -578,8 +582,7 @@ const PROGRAM_PRESETS = {
             { code: "SDST4601", name: "Time-Series Analysis", credits: 6, category: "second-major", prerequisites: ["SDST3600"] },
             { code: "SDST4607", name: "Credit Risk Analysis", credits: 6, category: "second-major", prerequisites: ["SDST3600"] },
             { code: "SDST4608", name: "Market Risk Analysis", credits: 6, category: "second-major", prerequisites: ["SDST3600"] },
-            { code: "SDST4610", name: "Bayesian Learning", credits: 6, category: "second-major", prerequisites: ["SDST3602"] },
-            // Advanced Electives — List R (24+ cr)
+            // Advanced Electives — List R (12+ cr)
             { code: "SDST3602", name: "Statistical Inference", credits: 6, category: "second-major", prerequisites: ["SDST2601"] },
             { code: "SDST3603", name: "Stochastic Processes", credits: 6, category: "second-major", prerequisites: ["SDST2601"] },
             { code: "SDST3610", name: "Risk Management and Insurance", credits: 6, category: "second-major", prerequisites: ["SDST2601"] },
@@ -589,9 +592,8 @@ const PROGRAM_PRESETS = {
             { code: "SDST3911", name: "Financial Economics II", credits: 6, category: "second-major", prerequisites: [] },
             { code: "SDST4603", name: "Current Topics in Risk Management", credits: 6, category: "second-major", prerequisites: ["SDST3609"] },
             { code: "SDST4606", name: "Risk Management and Basel Accords in Banking and Finance", credits: 6, category: "second-major", prerequisites: ["SDST3609"] },
+            { code: "SDST4610", name: "Bayesian Learning", credits: 6, category: "second-major", prerequisites: ["SDST3602"] },
             { code: "SDST4614", name: "Quantitative Risk Management", credits: 6, category: "second-major", prerequisites: ["SDST3609"] },
-            { code: "SDST7609", name: "Research Methods in Statistics", credits: 6, category: "second-major", prerequisites: [] },
-            { code: "SDST7610", name: "Advanced Probability", credits: 6, category: "second-major", prerequisites: [] },
             // Capstone (6 cr)
             { code: "SDST3799", name: "Directed Studies in Statistics", credits: 6, category: "second-major", prerequisites: [] },
             { code: "SDST4710", name: "Capstone Experience for Statistics Undergraduates", credits: 6, category: "second-major", prerequisites: [] },
@@ -603,23 +605,25 @@ const PROGRAM_PRESETS = {
     "da-major": {
         name: "Decision Analytics",
         type: "double",
-        credits: 90,
-        overlapNote: "2nd major in Decision Analytics: 90 cr above the Math major. MATH intro electives already in Math major. Cannot combine with Statistics or Risk Management.",
+        credits: 96,
+        overlapNote: "Decision Analytics 2nd Major (2025-26): 96 cr total. MATH1013 & MATH2014 overlap with Math major — no double counting. If MATH2014 already taken, replace with MATH2101 + MATH2211. Cannot combine with Statistics or Risk Management.",
         courses: [
-            // Introductory Core (30 cr)
+            // Introductory Core (48 cr)
             { code: "COMP1117", name: "Computer Programming", credits: 6, category: "second-major", prerequisites: [] },
             { code: "COMP2113", name: "Programming Technologies", credits: 6, category: "second-major", prerequisites: ["COMP1117"] },
             { code: "COMP2118", name: "Data Structures and Algorithms Essentials", credits: 6, category: "second-major", prerequisites: ["COMP1117"] },
+            { code: "MATH1013", name: "University Mathematics II", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "MATH2014", name: "Multivariable Calculus and Linear Algebra", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
+            { code: "SDST1600", name: "Statistics: Ideas and Concepts", credits: 6, category: "second-major", prerequisites: [] },
             { code: "SDST2601", name: "Probability and Statistics I", credits: 6, category: "second-major", prerequisites: ["MATH1013"] },
             { code: "SDST2602", name: "Probability and Statistics II", credits: 6, category: "second-major", prerequisites: ["SDST2601"] },
-            // Advanced Core (36 cr)
+            // Advanced Core (30 cr)
             { code: "MATH3900", name: "Optimization for AI and Data Analytics", credits: 6, category: "second-major", prerequisites: [] },
             { code: "SDST3600", name: "Linear Statistical Analysis", credits: 6, category: "second-major", prerequisites: ["SDST2601"] },
             { code: "SDST3612", name: "Statistical Machine Learning", credits: 6, category: "second-major", prerequisites: ["SDST2601"] },
             { code: "SDST4609", name: "Big Data Analytics", credits: 6, category: "second-major", prerequisites: ["SDST3600"] },
-            { code: "SDST4610", name: "Bayesian Learning", credits: 6, category: "second-major", prerequisites: ["SDST3602"] },
             { code: "SDST4611", name: "High-Dimensional Statistical Learning", credits: 6, category: "second-major", prerequisites: ["SDST3600"] },
-            // Advanced Electives — List D (24+ cr)
+            // Advanced Electives — List D (12+ cr)
             { code: "COMP3251", name: "Algorithm Design", credits: 6, category: "second-major", prerequisites: ["COMP2118"] },
             { code: "COMP3252", name: "Algorithm Design and Analysis", credits: 6, category: "second-major", prerequisites: ["COMP2118"] },
             { code: "COMP3278", name: "Intro to Database Management Systems", credits: 6, category: "second-major", prerequisites: ["COMP2118"] },
@@ -631,9 +635,7 @@ const PROGRAM_PRESETS = {
             { code: "SDST4023", name: "Medical Image Analysis", credits: 6, category: "second-major", prerequisites: [] },
             { code: "SDST4601", name: "Time-Series Analysis", credits: 6, category: "second-major", prerequisites: ["SDST3600"] },
             { code: "SDST4602", name: "Multivariate Data Analysis", credits: 6, category: "second-major", prerequisites: ["SDST3600"] },
-            { code: "SDST4612", name: "Interpretable Machine Learning", credits: 6, category: "second-major", prerequisites: ["SDST3612"] },
-            { code: "SDST4613", name: "Causal Inference", credits: 6, category: "second-major", prerequisites: ["SDST3600"] },
-            { code: "SDST7609", name: "Research Methods in Statistics", credits: 6, category: "second-major", prerequisites: [] },
+            { code: "SDST4610", name: "Bayesian Learning", credits: 6, category: "second-major", prerequisites: ["SDST3602"] },
             // Capstone (6 cr)
             { code: "SDST3799", name: "Directed Studies in Statistics", credits: 6, category: "second-major", prerequisites: [] },
             { code: "SDST4710", name: "Capstone Experience for Statistics Undergraduates", credits: 6, category: "second-major", prerequisites: [] },
