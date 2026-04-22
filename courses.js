@@ -42,6 +42,19 @@ const COURSES = [
     { code: "MATH4902", name: "Operations Research II", credits: 6, category: "math-elec-b", prerequisites: ["MATH3901"] },
     { code: "MATH4907", name: "Numerical Methods for Financial Calculus", credits: 6, category: "math-elec-b", prerequisites: ["MATH3601"] },
 
+    // === Graduate-level MATH 7xxx (UG allowed per Math Major List B / Major Intensive Streams A/B; requires course coordinator approval) ===
+    { code: "MATH7101", name: "Intermediate Complex Analysis", credits: 6, category: "math-elec-b", prerequisites: ["MATH3403"] },
+    { code: "MATH7201", name: "Topics in Geometry", credits: 6, category: "math-elec-b", prerequisites: ["MATH4402"] },
+    { code: "MATH7202", name: "Complex Manifolds", credits: 6, category: "math-elec-b", prerequisites: ["MATH3403"] },
+    { code: "MATH7217", name: "Topics in Financial Mathematics", credits: 6, category: "math-elec-b", prerequisites: [] },
+    { code: "MATH7219", name: "Topics in Applied Functional Analysis", credits: 6, category: "math-elec-b", prerequisites: ["MATH3401", "MATH4404"] },
+    { code: "MATH7224", name: "Topics in Advanced Probability Theory", credits: 6, category: "math-elec-b", prerequisites: ["MATH3603", "MATH4402"] },
+    { code: "MATH7501", name: "Topics in Algebra", credits: 6, category: "math-elec-b", prerequisites: [] },
+    { code: "MATH7502", name: "Topics in Applied Discrete Mathematics", credits: 6, category: "math-elec-b", prerequisites: ["MATH3600"] },
+    { code: "MATH7503", name: "Topics in Advanced Optimization", credits: 6, category: "math-elec-b", prerequisites: ["MATH3901", "MATH3904"] },
+    { code: "MATH7504", name: "Geometric Topology", credits: 6, category: "math-elec-b", prerequisites: ["MATH3301", "MATH3401"] },
+    { code: "MATH7505", name: "Real Analysis", credits: 6, category: "math-elec-b", prerequisites: ["MATH3401"] },
+
     // === Capstone ===
     { code: "MATH3999", name: "Directed Studies in Mathematics", credits: 6, category: "math-capstone", prerequisites: [] },
     { code: "MATH4910", name: "Senior Mathematics Seminar", credits: 6, category: "math-capstone", prerequisites: [] },
@@ -330,6 +343,10 @@ const COURSE_SEMESTERS = {
     "MATH3911": 2, "MATH3943": 1,
     // Seminar / Capstone / Project
     "MATH3002": 2, "MATH3999": 3, "MATH4902": 0, "MATH4907": 0,
+    // Graduate-level MATH 7xxx (UG allowed; 7 running 2025-26, 4 not scheduled)
+    "MATH7101": 1, "MATH7219": 1, "MATH7224": 1, "MATH7501": 1,
+    "MATH7502": 2, "MATH7503": 2, "MATH7505": 2,
+    "MATH7201": 0, "MATH7202": 0, "MATH7217": 0, "MATH7504": 0,
     "MATH4910": 2, "MATH4911": 0, "MATH4966": 3, "MATH4999": 0,
     // Language
     "CAES1000": 1, "CAES1001": 0, "CAES9000": 2,
